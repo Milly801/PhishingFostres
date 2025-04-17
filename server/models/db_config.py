@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
+from server.models.user_model import Base
 
 load_dotenv()
 
@@ -10,11 +11,14 @@ engine = create_engine(connection_str)
 
 try:
     with engine.connect() as connection:
-        print('Sucessfully connected to the cloud postgresql')
-        connection.close()
+        print('Successfully connected to the cloud PostgreSQL')
 except Exception as e:
-    print(f'Failed to connect to to cloud db: {e}')
+    print(f'Failed to connect to the cloud DB: {e}')
 
 DBSession = sessionmaker(bind=engine)
-
 ph_session = DBSession()
+
+# this is for creating the tables in the database
+if __name__ == "__main__":
+    Base.metadata.create_all(engine)
+    print("Tables created successfully!")
