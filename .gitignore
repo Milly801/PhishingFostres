@@ -1,3 +1,5 @@
 __pycache__/
 .env
 phish_dev/
+data.csv
+pyc
