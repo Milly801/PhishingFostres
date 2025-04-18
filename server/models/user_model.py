@@ -2,9 +2,7 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.sql import func
 from sqlalchemy.sql.sqltypes import DateTime
-
-
-Base = declarative_base()
+from .base import Base
 
 class User(Base):
     __tablename__ = 'Users'
