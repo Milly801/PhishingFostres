@@ -1,13 +1,13 @@
-from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
-from server.models.user_model import User 
+from server.models.user_model import User
+from server.models.db_config import ph_session
 
 class UserRepository:
-    def __init__(self, db_session: Session):
+    def __init__(self, db_session=ph_session): 
         self.db_session = db_session
 
     def create_user(self, user_data: dict):
-        new_user = User(**user_data)        
+        new_user = User(**user_data)
         self.db_session.add(new_user)
         self.db_session.commit()
         return new_user
