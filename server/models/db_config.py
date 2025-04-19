@@ -26,9 +26,6 @@ if __name__ == "__main__":
         print(f'Failed to connect to to cloud db: {e}')
 
 
-
-
-
 """seeding
 csv_file = "models/data.csv"
 df = pd.read_csv(csv_file)
