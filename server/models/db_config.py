@@ -11,24 +11,29 @@ load_dotenv()
 
 connection_str = os.environ.get('DB_URL')
 engine = create_engine(connection_str)
-
-try:
-    with engine.connect() as connection:
-        print('Sucessfully connected to the cloud postgresql')
-        connection.close()
-except Exception as e:
-    print(f'Failed to connect to to cloud db: {e}')
-
 DBSession = sessionmaker(bind=engine)
 
 ph_session = DBSession()
 
 Base.metadata.create_all(engine)
 
+if __name__ == "__main__":
+    try:
+        with engine.connect() as connection:
+            print('Sucessfully connected to the cloud postgresql')
+            connection.close()
+    except Exception as e:
+        print(f'Failed to connect to to cloud db: {e}')
+
+
+
+
+
+"""seeding
 csv_file = "models/data.csv"
 df = pd.read_csv(csv_file)
 
-df = df.head(50)
+df = df.head(200)
 
 def extract_sender_deets(sender):
     if not isinstance(sender, str):
@@ -68,3 +73,4 @@ except Exception as e:
     print(f"An error occurred: {e}")
 finally:
     ph_session.close()
+"""
