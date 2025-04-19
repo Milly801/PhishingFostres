@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
-from server.models.user_model import Base
+from server.models.base import Base
 
 load_dotenv()
 
@@ -20,5 +20,6 @@ ph_session = DBSession()
 
 # this is for creating the tables in the database
 if __name__ == "__main__":
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-    print("Tables created successfully!")
+    print("successfully!")
