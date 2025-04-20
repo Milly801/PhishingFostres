@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 from models.base import Base
 from models.emailscenario_model import EmailScenario
+from models.user_model import User
 import pandas as pd
 import re
 
