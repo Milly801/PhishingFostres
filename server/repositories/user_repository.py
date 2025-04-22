@@ -1,6 +1,6 @@
 from sqlalchemy.exc import NoResultFound
-from models.user_model import User
-from models.db_config import ph_session
+from server.models.user_model import User
+from server.models.db_config import ph_session
 from sqlalchemy.future import select
 import asyncio
 
@@ -14,14 +14,16 @@ class UserRepository:
             existing_user = result.scalars().first()
             if existing_user:
                 return existing_user
-        new_user = User(**user.dict())
+        new_user = User(**user)
         self.db_session.add(new_user)
         self.db_session.commit()
         return new_user
 
     async def get_all_users(self):
         result = self.db_session.execute(select(User))
-        return result.scalars().all()
+        all_users = result.scalars().all()
+        for user in all_users:
+            print(str(user))
 
     def get_user_by_id(self, user_id: str):
         try:
@@ -58,9 +60,11 @@ class UserRepository:
         return False
 
 
+"""
 async def test_repository():
     test_instance = UserRepository()
     all_users = await test_instance.get_all_users()
     print(all_users)
 
 asyncio.run(test_repository())
+"""

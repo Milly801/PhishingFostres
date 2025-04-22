@@ -1,5 +1,5 @@
-from models.db_config import ph_session
-from models.emailscenario_model import EmailScenario
+from server.models.db_config import ph_session
+from server.models.emailscenario_model import EmailScenario
 import random
 from typing import Optional
 import textwrap
@@ -35,4 +35,3 @@ class EmailScenarioRepo:
         random.shuffle(mixed_scenarios)
         limited_emails = mixed_scenarios[:count]
         return self.format_scenarios(limited_emails)
-

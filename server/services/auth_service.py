@@ -1,15 +1,14 @@
 import os
 from fastapi import Depends, HTTPException, Security
-from jose import jwt, JwtError
+from jose import jwt, JWTError
 from dotenv import load_dotenv
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import requests
 
-
 load_dotenv()
 AUTH_DOMAIN = os.getenv("AUTH_DOMAIN")
 API_AUDIENCE = os.getenv("API_AUDIENCE")
-ALGORITHMS = os.getenv("AUTH_ALGORITHMS, RS256")
+ALGORITHMS = os.getenv("AUTH_ALGORITHMS", "RS256")
 
 security = HTTPBearer()
 
@@ -18,7 +17,10 @@ def get_public_key():
     response = requests.get(jwk_url)
     if response.status_code != 200:
         raise HTTPException(status_code=500, detail="Unable to fetch JWKS")
-    return response.json()["keys"]
+    keys = response.json()
+    if isinstance(keys, list):
+        return {"keys": keys}
+    return keys
 
 
 def verify_jwt(credentials: HTTPAuthorizationCredentials = Security(security)):
@@ -36,12 +38,17 @@ def verify_jwt(credentials: HTTPAuthorizationCredentials = Security(security)):
         if not matching_key:
             raise HTTPException(
                 status_code=401, detail="Invalid token: No matching 'kid' found in JWKS")
-
-        rsa_key = jwt.construct_rsa_key(matching_key)
+        rsa_key = {
+            "kty": matching_key["kty"],
+            "kid": matching_key["kid"],
+            "use": matching_key["use"],
+            "n": matching_key["n"],
+            "e": matching_key["e"]
+        }
         payload = jwt.decode(
             token,
             rsa_key,
-            algorithms=ALGORITHMS,
+            algorithms=[ALGORITHMS],
             audience=API_AUDIENCE,
             issuer=f"https://{AUTH_DOMAIN}/"
         )

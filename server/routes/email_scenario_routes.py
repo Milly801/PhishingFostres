@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from repositories.email_scenario.EmailScenarioRepo import get_randomize
+from server.repositories.emailscenario_repo import EmailScenarioRepo
 
 router = APIRouter(
     prefix="/email_s",
