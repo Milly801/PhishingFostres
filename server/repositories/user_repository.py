@@ -1,31 +1,43 @@
 from sqlalchemy.exc import NoResultFound
-from models.user_model import User
-from models.db_config import ph_session
+from server.models.user_model import User
+from server.models.db_config import ph_session
+from sqlalchemy.future import select
+import asyncio
 
 class UserRepository:
     def __init__(self, db_session=ph_session):
         self.db_session = db_session
 
-    def create_user(self, user_data: dict):
-        new_user = User(**user_data)
+    async def create_user(self, user: User, check_existing=False):
+        if check_existing:
+            result = self.db_session.execute(select(User).where(User.email == user.email))
+            existing_user = result.scalars().first()
+            if existing_user:
+                return existing_user
+        new_user = User(**user)
         self.db_session.add(new_user)
         self.db_session.commit()
         return new_user
 
-    def get_all_users(self):
-        return self.db_session.query(User).all()
+    async def get_all_users(self):
+        result = self.db_session.execute(select(User))
+        all_users = result.scalars().all()
+        for user in all_users:
+            print(str(user))
 
-    def get_user_by_id(self, user_id: str):
+    async def get_user_by_id(self, user_id: str):
         try:
-            user = self.db_session.query(User).filter_by(id=user_id).first()
-            return user
+            result = self.db_session.execute(select(User).where(User.id == user_id))
+            existing_user = result.scalars().first()
+            return existing_user
         except NoResultFound:
             return None
 
-    def get_user_by_email(self, email: str):
+    async def get_user_by_email(self, email: str):
         try:
-            user = self.db_session.query(User).filter_by(email=email).first()
-            return user
+            result = self.db_session.execute(select(User).where(User.email == email))
+            existing_user = result.scalars().first()
+            return result
         except NoResultFound:
             return None
 
@@ -48,3 +60,13 @@ class UserRepository:
             print(f"User deleted successfully.")
             return True
         return False
+
+
+"""
+async def test_repository():
+    test_instance = UserRepository()
+    all_users = await test_instance.get_all_users()
+    print(all_users)
+
+asyncio.run(test_repository())
+"""

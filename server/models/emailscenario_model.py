@@ -1,5 +1,5 @@
-from models.base import Base
-from models.utils import get_uuid
+from server.models.base import Base
+from server.models.utils import get_uuid
 from sqlalchemy import Column,Text, String, Integer, DateTime, func
 
 
