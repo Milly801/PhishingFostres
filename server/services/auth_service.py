@@ -22,6 +22,15 @@ def get_public_key():
         return {"keys": keys}
     return keys
 
+async def get_user_info(token: str):
+    userinfo_url = f"https://{AUTH_DOMAIN}/userinfo"
+    response = requests.get(
+        userinfo_url,
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    if response.status_code != 200:
+        raise HTTPException(status_code=500, detail="Failed to get user info")
+    return response.json()
 
 def verify_jwt(credentials: HTTPAuthorizationCredentials = Security(security)):
     token = credentials.credentials
