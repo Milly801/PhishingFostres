@@ -25,17 +25,19 @@ class UserRepository:
         for user in all_users:
             print(str(user))
 
-    def get_user_by_id(self, user_id: str):
+    async def get_user_by_id(self, user_id: str):
         try:
-            user = self.db_session.query(User).filter_by(id=user_id).first()
-            return user
+            result = self.db_session.execute(select(User).where(User.id == user_id))
+            existing_user = result.scalars().first()
+            return existing_user
         except NoResultFound:
             return None
 
-    def get_user_by_email(self, email: str):
+    async def get_user_by_email(self, email: str):
         try:
-            user = self.db_session.query(User).filter_by(email=email).first()
-            return user
+            result = self.db_session.execute(select(User).where(User.email == email))
+            existing_user = result.scalars().first()
+            return result
         except NoResultFound:
             return None
 

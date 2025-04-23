@@ -36,3 +36,27 @@ async def signup(request: Request, authorization:str = Header(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/auth/login")
+async def login(request: Request, authorization:str = Header(...)):
+    try:
+        body = await request.json()
+        email = body.get("email")
+        if not email:
+            raise HTTPException(status_code=401, detail="No email provided")
+        if not authorization.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="No auth header")
+        token = authorization.split(" ")[1]
+        credentials = HTTPAuthorizationCredentials(
+            scheme="Bearer", credentials=token)
+        decoded_token = verify_jwt(credentials)
+
+        user_repository = UserRepository()
+        existing_user = await user_repository.get_user_by_email(email)
+        if not existing_user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return {
+            "message": "Login successful!"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
