@@ -1,4 +1,3 @@
-// App.jsx
 import { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { authService } from './services/authService';
@@ -6,8 +5,9 @@ import { Navigation } from './components/landing/Navigation';
 import { Hero } from './components/landing/Hero';
 import { Stats } from './components/landing/Stats';
 import { Features } from './components/landing/Features';
-import { HowItWorks } from './components/landing/HowItWorks'
-import { CTA } from './components/landing/CTA';import { Testimonials } from './components/landing/Testimonials';
+import { HowItWorks } from './components/landing/HowItWorks';
+import { Testimonials } from './components/landing/Testimonials';
+import { CTA } from './components/landing/CTA';
 import { Footer } from './components/landing/Footer';
 import { AuthButtons } from './components/auth/AuthButtons';
 import './App.css';
@@ -49,9 +49,13 @@ function App() {
   const handleGetStarted = () => {
     loginWithRedirect();
   };
+  const handleWatchDemo = () => {
+    // Add demo functionality here
+    console.log('Watch demo clicked');
+  };
 
   return (
-    <div div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100">
       {!isAuthenticated? (
         <>
         <Navigation onGetStarted={handleGetStarted} />
