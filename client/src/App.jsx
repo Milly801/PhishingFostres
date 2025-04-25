@@ -2,6 +2,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { authService } from './services/authService';
+import { Navigation } from './components/landing/Navigation';
+import { Hero } from './components/landing/Hero';
+import { Stats } from './components/landing/Stats';
+import { Features } from './components/landing/Features';
+import { HowItWorks } from './components/landing/HowItWorks'
+import { CTA } from './components/landing/CTA';import { Testimonials } from './components/landing/Testimonials';
+import { Footer } from './components/landing/Footer';
+import { AuthButtons } from './components/auth/AuthButtons';
 import './App.css';
 
 function App() {
@@ -38,25 +46,34 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  return (
-    <div className="app">
-      <div className="auth-container">
-        <h1>PhishingFortress</h1>
-        {error && <div className="error">{error}</div>}
+  const handleGetStarted = () => {
+    loginWithRedirect();
+  };
 
-        {!isAuthenticated ? (
-          <div className="auth-form">
-            <button onClick={() => loginWithRedirect()}>Log In / Sign Up</button>
+  return (
+    <div div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100">
+      {!isAuthenticated? (
+        <>
+        <Navigation onGetStarted={handleGetStarted} />
+        <Hero onGetStarted={handleGetStarted} onWatchDemo={handleWatchDemo} />
+        <Stats />
+        <Features />
+        <HowItWorks />
+        <Testimonials />
+          <CTA
+            onGetStarted={() => loginWithRedirect()}
+            onScheduleDemo={() => {/* Add demo scheduling functionality */ }}
+          />
+          <Footer />
+        </>
+      ) : (
+          <div className="auth-container">
+            <h1>Welcome to PhishingFortress</h1>
+            {error && <div className="error">{error}</div>}
+            <AuthButtons />
           </div>
-        ) : (
-          <div className="auth-form">
-            <h2>Welcome, {user.email}</h2>
-            <button onClick={() => logout({ returnTo: window.location.origin })}>
-              Log Out
-            </button>
-          </div>
-        )}
-      </div>
+      )}
+
     </div>
   );
 }
