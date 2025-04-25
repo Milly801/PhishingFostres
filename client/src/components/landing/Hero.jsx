@@ -1,22 +1,23 @@
 import { Lock, ChevronRight } from "lucide-react"
+import protection from "../../assets/protection.jpg"
 
 export function Hero({ onGetStarted, onWatchDemo }) {
     return (
         <section className="pt-32 pb-20 md:pt-40 md:pb-28">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col md:flex-row items-center">
-                    <div className="md:w-1/2 mb-10 md:mb-0">
+                    <div className="md:w-1/2 mb-10 md:mb-0 text-left">
                         <div className="inline-block px-3 py-1 mb-4 rounded-full bg-[#233554] text-[#64ffda] text-xs font-semibold">
                             CYBER SECURITY TRAINING
                         </div>
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-left">
                             Defend Against <span className="text-[#64ffda]">Phishing</span> Attacks
                         </h1>
-                        <p className="text-lg text-gray-400 mb-8 max-w-lg">
+                        <p className="text-lg text-gray-400 mb-8 max-w-lg text-left">
                             PhishingFortress helps you identify and prevent phishing scams through realistic simulations and expert
                             training.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-4 justify-start">
                             <button
                                 onClick={onGetStarted}
                                 className="px-6 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors"
@@ -36,9 +37,9 @@ export function Hero({ onGetStarted, onWatchDemo }) {
                         </div>
                     </div>
                     <div className="md:w-1/2 relative">
-                        <div className="relative z-10 rounded-lg overflow-hidden shadow-2xl border border-[#233554]">
+                        <div className="relative z-10 rounded-lg overflow-hidden shadow-2xl border border-[#233554] max-w-lg mx-auto">
                             <img
-                                src="https://placehold.co/800x600/0a192f/64ffda"
+                                src={protection}
                                 alt="Phishing protection dashboard"
                                 className="w-full h-auto"
                             />
