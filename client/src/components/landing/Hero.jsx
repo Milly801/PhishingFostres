@@ -14,7 +14,7 @@ export function Hero({ onGetStarted, onWatchDemo }) {
                             Defend Against <span className="text-[#64ffda]">Phishing</span> Attacks
                         </h1>
                         <p className="text-lg text-gray-400 mb-8 max-w-lg text-left">
-                            PhishingFortress helps you identify and prevent phishing scams through realistic simulations and expert
+                            PhishFortress helps you identify and prevent phishing scams through realistic simulations and expert
                             training.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-start">

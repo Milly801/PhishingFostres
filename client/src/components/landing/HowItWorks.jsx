@@ -3,7 +3,7 @@ export function HowItWorks() {
         <section id="how-it-works" className="py-20 bg-[#0a192f]">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4">How PhishingFortress Works</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4">How PhishFortress Works</h2>
                     <p className="text-gray-400 max-w-2xl mx-auto">
                         Our three-step approach ensures comprehensive protection against phishing threats.
                     </p>

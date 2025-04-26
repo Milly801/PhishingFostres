@@ -9,15 +9,20 @@ class UserRepository:
         self.db_session = db_session
 
     async def create_user(self, user: User, check_existing=False):
-        if check_existing:
-            result = self.db_session.execute(select(User).where(User.email == user.email))
-            existing_user = result.scalars().first()
-            if existing_user:
-                return existing_user
-        new_user = User(**user)
-        self.db_session.add(new_user)
-        self.db_session.commit()
-        return new_user
+        try:
+            if check_existing:
+                result = self.db_session.execute(select(User).where(User.email == user.email))
+                existing_user = result.scalars().first()
+                if existing_user:
+                    return existing_user
+            new_user = User(**user)
+            self.db_session.add(new_user)
+            self.db_session.commit()
+            return new_user
+        except Exception as e:
+            print(f"Error creating user: {e}")
+            self.db_session.rollback()
+            raise e
 
     async def get_all_users(self):
         result = self.db_session.execute(select(User))
@@ -42,24 +47,32 @@ class UserRepository:
             return None
 
     def update_user(self, user_id: str, updated_data: dict):
-        user = self.get_user_by_id(user_id)
-        if user:
-            for key, value in updated_data.items():
-                setattr(user, key, value)
-            self.db_session.commit()
-            return user
-        return None
+        try:
+            user = self.get_user_by_id(user_id)
+            if user:
+                for key, value in updated_data.items():
+                    setattr(user, key, value)
+                self.db_session.commit()
+                return user
+            return None
+        except Exception as e:
+            self.db_session.rollback()
+            raise e
 
     def delete_user(self, user_id: str):
-        print(f"Attempting to delete user with ID: {user_id}")
-        user = self.get_user_by_id(user_id)
-        if user:
-            print(f"User found: {user}")
-            self.db_session.delete(user)
-            self.db_session.commit()
-            print(f"User deleted successfully.")
-            return True
-        return False
+        try:
+            print(f"Attempting to delete user with ID: {user_id}")
+            user = self.get_user_by_id(user_id)
+            if user:
+                print(f"User found: {user}")
+                self.db_session.delete(user)
+                self.db_session.commit()
+                print(f"User deleted successfully.")
+                return True
+            return False
+        except Exception as e:
+            self.db_session.rollback()
+            raise e
 
 
 """

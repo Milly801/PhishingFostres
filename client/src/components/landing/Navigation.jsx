@@ -32,7 +32,7 @@ export function Navigation({ onGetStarted }) {
                         <div className="flex items-center flex-shrink-0 group">
                             <Shield className="h-7 w-7 text-[#64ffda] transform transition-transform group-hover:scale-110 duration-300" />
                             <span className="ml-2 text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#64ffda] to-[#4cceac] group-hover:bg-gradient-to-r group-hover:from-[#4cceac] group-hover:to-[#64ffda] transition-all duration-300">
-                                PhishingFortress
+                                PhishFortress
                             </span>
                         </div>
 
@@ -61,7 +61,7 @@ export function Navigation({ onGetStarted }) {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="md:hidden ml-auto">
                     <button className="text-gray-100" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                         {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

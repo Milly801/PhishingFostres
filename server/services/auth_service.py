@@ -38,15 +38,18 @@ def verify_jwt(credentials: HTTPAuthorizationCredentials = Security(security)):
         jwks = get_public_key()
         unverified_header = jwt.get_unverified_header(token)
         kid = unverified_header.get("kid")
-
         if not kid:
+            print("No 'kid' found in token header.")
             raise HTTPException(
                 status_code=401, detail="Invalid token: Missing 'kid' in header")
+
         matching_key = next(
             (jwk for jwk in jwks["keys"] if jwk["kid"] == kid), None)
+
         if not matching_key:
             raise HTTPException(
                 status_code=401, detail="Invalid token: No matching 'kid' found in JWKS")
+
         rsa_key = {
             "kty": matching_key["kty"],
             "kid": matching_key["kid"],
