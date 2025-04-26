@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException, Header, Request
 from fastapi.security import HTTPAuthorizationCredentials
 from server.repositories.user_repository import UserRepository
-from server.services.auth_service import verify_jwt
+from server.services.auth_service import verify_jwt, get_user_info
 from server.models.user_model import User
 import requests
 
@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 @router.post("/auth/signup")
-async def signup(request: Request, authorization:str = Header(...)):
+async def signup(authorization:str = Header(...)):
     try:
         if not authorization.startswith("Bearer "):
             raise HTTPException(status_code=401, detail="No auth header")
@@ -20,12 +20,15 @@ async def signup(request: Request, authorization:str = Header(...)):
         credentials = HTTPAuthorizationCredentials(
             scheme="Bearer", credentials=token)
         decoded_token = verify_jwt(credentials)
-        body = await request.json()
+
+        user_info = await get_user_info(token)
+
+        print("Decoded token contents:", decoded_token)
 
         auth0_id = decoded_token["sub"]
-        #email = decoded_token["email"]
+        email = user_info["email"]
 
-        user_data = {"email":body["email"], "auth0_id":auth0_id, "user_name":body["user_name"]}
+        user_data = {"email": email, "auth0_id":auth0_id}
         user_repository = UserRepository()
         new_user = await user_repository.create_user(user_data)
         return {
@@ -38,18 +41,18 @@ async def signup(request: Request, authorization:str = Header(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/auth/login")
-async def login(request: Request, authorization:str = Header(...)):
+async def login(authorization:str = Header(...)):
     try:
-        body = await request.json()
-        email = body.get("email")
-        if not email:
-            raise HTTPException(status_code=401, detail="No email provided")
         if not authorization.startswith("Bearer "):
             raise HTTPException(status_code=401, detail="No auth header")
         token = authorization.split(" ")[1]
         credentials = HTTPAuthorizationCredentials(
             scheme="Bearer", credentials=token)
         decoded_token = verify_jwt(credentials)
+        user_info = await get_user_info(token)
+        email = user_info["email"]
+        if not email:
+            raise HTTPException(status_code=401, detail="No email provided")
 
         user_repository = UserRepository()
         existing_user = await user_repository.get_user_by_email(email)
