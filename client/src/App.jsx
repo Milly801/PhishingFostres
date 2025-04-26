@@ -11,19 +11,23 @@ import { CTA } from './components/landing/CTA';
 import { Footer } from './components/landing/Footer';
 import { AuthButtons } from './components/auth/AuthButtons';
 import './App.css';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const { isLoading, isAuthenticated, user, loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
   const [error, setError] = useState(null);
+  const [redirecting, setRedirecting] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const isAuthCallback = window.location.search.includes('code=') && window.location.search.includes('state=');
+
     const handleAuthentication = async () => {
-      if (isAuthenticated && user) {
+      if (isAuthenticated && user && isAuthCallback) {
         try {
           const token = await getAccessTokenSilently();
           try {
             await authService.login(token);
-            // If login succeeds, user exists
             console.log('Login successful');
           } catch (loginError) {
             if (loginError.status === 404) {
@@ -33,6 +37,8 @@ function App() {
               throw loginError;
             }
           }
+          setRedirecting(true);
+          navigate('/simulation/start', { replace: true });
         } catch (error) {
           setError(error.detail || 'An error occurred during authentication');
         }
@@ -40,9 +46,9 @@ function App() {
     };
 
     handleAuthentication();
-  }, [isAuthenticated, user, getAccessTokenSilently]);
+  }, [isAuthenticated, user, getAccessTokenSilently, navigate]);
 
-  if (isLoading) {
+  if (isLoading || redirecting) {
     return <div>Loading...</div>;
   }
 
@@ -56,28 +62,23 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100">
-      {!isAuthenticated? (
-        <>
-        <Navigation onGetStarted={handleGetStarted} />
-        <Hero onGetStarted={handleGetStarted} onWatchDemo={handleWatchDemo} />
-        <Stats />
-        <Features />
-        <HowItWorks />
-        <Testimonials />
-          <CTA
-            onGetStarted={() => loginWithRedirect()}
-            onScheduleDemo={() => {/* Add demo scheduling functionality */ }}
-          />
-          <Footer />
-        </>
-      ) : (
-          <div className="auth-container">
-            <h1>Welcome to PhishingFortress</h1>
-            {error && <div className="error">{error}</div>}
-            <AuthButtons />
-          </div>
+      <Navigation onGetStarted={handleGetStarted} />
+      <Hero onGetStarted={handleGetStarted} onWatchDemo={handleWatchDemo} />
+      <Stats />
+      <Features />
+      <HowItWorks />
+      <Testimonials />
+      <CTA
+        onGetStarted={() => loginWithRedirect()}
+        onScheduleDemo={() => {/* Add demo scheduling functionality */ }}
+      />
+      <Footer />
+      {isAuthenticated && (
+        <div className="auth-container mt-8 text-center">
+          <h2>Welcome{user && user.name ? `, ${user.name}` : ''}!</h2>
+          {error && <div className="error">{error}</div>}
+        </div>
       )}
-
     </div>
   );
 }

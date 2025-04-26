@@ -1,26 +1,31 @@
 from sqlalchemy.exc import NoResultFound
 from server.models.user_model import User
-from server.models.db_config import ph_session
+from server.models.db_config import ph_session, DBSession
 from sqlalchemy.future import select
 import asyncio
 
 class UserRepository:
-    def __init__(self, db_session=ph_session):
-        self.db_session = db_session
+    def __init__(self):
+        self.db_session = DBSession()
 
     async def create_user(self, user: User, check_existing=False):
         try:
+            print(f"[DEBUG] Attempting to create user with data: {user}")
             if check_existing:
-                result = self.db_session.execute(select(User).where(User.email == user.email))
+                print(f"[DEBUG] Checking if user with email {user['email']} exists")
+                result = self.db_session.execute(select(User).where(User.email == user['email']))
                 existing_user = result.scalars().first()
                 if existing_user:
+                    print(f"[DEBUG] User already exists: {existing_user}")
                     return existing_user
             new_user = User(**user)
             self.db_session.add(new_user)
+            print(f"[DEBUG] New user added to session: {new_user}")
             self.db_session.commit()
+            print(f"[DEBUG] User committed to DB: {new_user}")
             return new_user
         except Exception as e:
-            print(f"Error creating user: {e}")
+            print(f"[ERROR] Error creating user: {e}")
             self.db_session.rollback()
             raise e
 
