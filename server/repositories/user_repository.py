@@ -8,7 +8,7 @@ class UserRepository:
     def __init__(self):
         self.db_session = DBSession()
 
-    async def create_user(self, user: User, check_existing=False):
+    def create_user(self, user: User, check_existing=False):
         try:
             print(f"[DEBUG] Attempting to create user with data: {user}")
             if check_existing:
@@ -29,13 +29,13 @@ class UserRepository:
             self.db_session.rollback()
             raise e
 
-    async def get_all_users(self):
+    def get_all_users(self):
         result = self.db_session.execute(select(User))
         all_users = result.scalars().all()
         for user in all_users:
             print(str(user))
 
-    async def get_user_by_id(self, user_id: str):
+    def get_user_by_id(self, user_id: str):
         try:
             result = self.db_session.execute(select(User).where(User.id == user_id))
             existing_user = result.scalars().first()
@@ -43,11 +43,11 @@ class UserRepository:
         except NoResultFound:
             return None
 
-    async def get_user_by_email(self, email: str):
+    def get_user_by_email(self, email: str):
         try:
             result = self.db_session.execute(select(User).where(User.email == email))
             existing_user = result.scalars().first()
-            return result
+            return existing_user
         except NoResultFound:
             return None
 

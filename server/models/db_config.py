@@ -11,7 +11,7 @@ import re
 load_dotenv()
 
 connection_str = os.environ.get('DB_URL')
-engine = create_engine(connection_str)
+engine = create_engine(connection_str,  pool_pre_ping=True)
 DBSession = sessionmaker(bind=engine)
 
 ph_session = DBSession()

@@ -22,7 +22,7 @@ def get_public_key():
         return {"keys": keys}
     return keys
 
-async def get_user_info(token: str):
+def get_user_info(token: str):
     userinfo_url = f"https://{AUTH_DOMAIN}/userinfo"
     response = requests.get(
         userinfo_url,

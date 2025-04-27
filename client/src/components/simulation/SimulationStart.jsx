@@ -1,9 +1,13 @@
 "use client"
-import { Shield, Lock, AlertTriangle, ChevronRight, Info } from "lucide-react"
+import { Shield, Lock, AlertTriangle, ChevronRight, Info, LogOut } from "lucide-react"
 import { useNavigate } from "react-router-dom";
 import { useRef } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+
 
 const SimulationStart = () => {
+
+  const { user, logout } = useAuth0();
   const navigate = useNavigate();
   const hasRedirected = useRef(false);
 
@@ -18,6 +22,27 @@ const SimulationStart = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100 flex items-center justify-center px-4">
       <div className="max-w-3xl w-full">
+        {/* User Info Bar */}
+        <div className="flex items-center mb-6">
+          <img
+            src={user?.picture}
+            alt={user?.email}
+            className="h-10 w-10 rounded-full mr-3"
+          />
+          <div className="mr-4">
+            <div className="font-bold">{user?.nickname || user?.email}</div>
+            <div className="text-xs text-gray-400">{user?.email}</div>
+          </div>
+          <button
+            onClick={() => logout({ returnTo: window.location.origin })}
+            className="ml-auto flex items-center text-gray-400 hover:text-red-500 transition-colors text-sm"
+            title="Log out"
+          >
+            <LogOut className="h-5 w-5 mr-1" />
+            Logout
+          </button>
+        </div>
+
         {/* Logo and back button */}
         <div className="flex justify-between items-center mb-12">
           <button
