@@ -9,7 +9,6 @@ import { HowItWorks } from './components/landing/HowItWorks';
 import { WhyChooseUs } from './components/landing/WhyChooseUs';
 import { CTA } from './components/landing/CTA';
 import { Footer } from './components/landing/Footer';
-import { AuthButtons } from './components/auth/AuthButtons';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import { HashLoader } from "react-spinners";
@@ -67,7 +66,6 @@ function App() {
       <WhyChooseUs />
       <CTA
         onGetStarted={handleGetStarted}
-        onScheduleDemo={() => {/* Add demo scheduling functionality */ }}
       />
       <Footer />
       {isAuthenticated && (
