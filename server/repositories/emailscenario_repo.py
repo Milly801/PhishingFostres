@@ -9,9 +9,9 @@ class EmailScenarioRepo:
     def __init__(self):
         self.db = ph_session
 
-    def format_scenarios(self, scenarios: list) -> str:
-        """Formats a list of EmailScenario objects into a readable string."""
-        return "\n".join(str(scenario) for scenario in scenarios)
+    def format_scenarios(self, scenarios):
+        """Format a list of scenarios into clean JSON"""
+        return [scenario.to_dict() for scenario in scenarios]
 
 
     def get_all_email_scenarios(self):
