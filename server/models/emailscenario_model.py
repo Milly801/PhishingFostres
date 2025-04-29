@@ -1,6 +1,6 @@
 from server.models.base import Base
 from server.models.utils import get_uuid
-from sqlalchemy import Column,Text, String, Integer, DateTime, func
+from sqlalchemy import Column,Text, String, Integer, DateTime, func, Index
 import re
 
 
@@ -16,6 +16,12 @@ class EmailScenario(Base):
     is_phishing =Column(Integer, nullable=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
+
+    # adding indexing for db queries
+    __table_args__ = (
+        Index('idx_email_scenarios', 'is_phishing'),
+        Index('idx_email_scenarios_phishing_created', 'is_phishing', 'created_at')
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
