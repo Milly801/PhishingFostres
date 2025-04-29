@@ -6,7 +6,7 @@ import { Hero } from './components/landing/Hero';
 import { Stats } from './components/landing/Stats';
 import { Features } from './components/landing/Features';
 import { HowItWorks } from './components/landing/HowItWorks';
-import { Testimonials } from './components/landing/Testimonials';
+import { WhyChooseUs } from './components/landing/WhyChooseUs';
 import { CTA } from './components/landing/CTA';
 import { Footer } from './components/landing/Footer';
 import { AuthButtons } from './components/auth/AuthButtons';
@@ -64,7 +64,7 @@ function App() {
       <Stats />
       <Features />
       <HowItWorks />
-      <Testimonials />
+      <WhyChooseUs />
       <CTA
         onGetStarted={handleGetStarted}
         onScheduleDemo={() => {/* Add demo scheduling functionality */ }}

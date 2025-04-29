@@ -1,126 +1,83 @@
-import { Shield } from "lucide-react"
+import { Shield, Github, Mail } from "lucide-react"
 
 export function Footer() {
     return (
-        <footer className="py-12 bg-[#0a192f] border-t border-[#233554]">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="flex flex-col md:flex-row justify-between mb-8">
-                    <div className="mb-8 md:mb-0">
-                        <div className="flex items-center mb-4">
-                            <Shield className="h-6 w-6 text-[#64ffda]" />
-                            <span className="ml-2 text-lg font-bold">PhishingFortress</span>
+        <footer className="py-12 bg-[#0a192f] border-t border-[#233554] relative overflow-hidden">
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#64ffda]/5 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#233554]/30 rounded-full blur-3xl"></div>
+
+            <div className="container mx-auto px-4 md:px-6 relative">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+                    <div className="space-y-8">
+                        {/* Logo */}
+                        <div className="inline-flex items-center group hover:-translate-y-1 transition-transform duration-300">
+                            <div className="relative">
+                                <Shield className="h-8 w-8 text-[#64ffda] transform group-hover:rotate-12 transition-transform duration-300" />
+                                <div className="absolute inset-0 bg-[#64ffda]/20 rounded-full scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                            </div>
+                            <span className="ml-2 text-xl font-bold bg-gradient-to-r from-[#64ffda] to-[#4cceac] bg-clip-text text-transparent">
+                                PhishFortress
+                            </span>
                         </div>
-                        <p className="text-gray-400 max-w-xs">
-                            Protecting organizations from phishing attacks through simulation, training, and real-time protection.
+
+                        {/* Description */}
+                        <p className="text-gray-400 max-w-md leading-relaxed">
+                            Empowering users to identify and protect themselves from phishing attempts through interactive and practical training.
                         </p>
+
+
+                        <div className="flex items-center space-x-4">
+                            <a
+                                href="https://github.com"
+                                className="group flex items-center space-x-2 text-gray-400 hover:text-[#64ffda] transition-all duration-300"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <div className="relative p-2">
+                                    <Github className="h-5 w-5" />
+                                    <span className="absolute inset-0 rounded-lg border-2 border-[#64ffda]/0 group-hover:border-[#64ffda]/50 transition-all duration-300"></span>
+                                </div>
+                                <span className="text-sm group-hover:translate-x-1 transition-transform duration-300">GitHub</span>
+                            </a>
+                            <span className="text-gray-600">•</span>
+                            <a
+                                href="mailto:contact@example.com"
+                                className="group flex items-center space-x-2 text-gray-400 hover:text-[#64ffda] transition-all duration-300"
+                            >
+                                <div className="relative p-2">
+                                    <Mail className="h-5 w-5" />
+                                    <span className="absolute inset-0 rounded-lg border-2 border-[#64ffda]/0 group-hover:border-[#64ffda]/50 transition-all duration-300"></span>
+                                </div>
+                                <span className="text-sm group-hover:translate-x-1 transition-transform duration-300">Contact</span>
+                            </a>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                        <div>
-                            <h4 className="font-bold mb-4">Product</h4>
-                            <ul className="space-y-2">
-                                <li>
-                                    <a href="#features" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Features
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Pricing
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Case Studies
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Resources
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 className="font-bold mb-4">Company</h4>
-                            <ul className="space-y-2">
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        About
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Blog
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Careers
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Contact
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 className="font-bold mb-4">Legal</h4>
-                            <ul className="space-y-2">
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Privacy
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Terms
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                                        Security
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                    {/* Right Section - Quick Links */}
+                    <div className="flex flex-col space-y-2">
+                        {["Features", "How It Works", "Why Choose Us"].map((label) => (
+                            <a
+                                key={label}
+                                href={`#${label.toLowerCase().replace(/\s+/g, '-')}`}
+                                className="group text-gray-400 hover:text-[#64ffda] transition-colors duration-300 w-fit"
+                            >
+                                <span className="relative">
+                                    {label}
+                                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#64ffda] transition-all duration-300 group-hover:w-full"></span>
+                                </span>
+                            </a>
+                        ))}
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-[#233554] flex flex-col md:flex-row justify-between items-center">
-                    <p className="text-sm text-gray-400">© {new Date().getFullYear()} PhishingFortress. All rights reserved.</p>
-                    <div className="flex space-x-6 mt-4 md:mt-0">
-                        <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                            <span className="sr-only">Twitter</span>
-                            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                            </svg>
-                        </a>
-                        <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                            <span className="sr-only">LinkedIn</span>
-                            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        </a>
-                        <a href="#" className="text-gray-400 hover:text-[#64ffda] transition-colors">
-                            <span className="sr-only">GitHub</span>
-                            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        </a>
-                    </div>
+                {/* Bottom Copyright - Full Width */}
+                <div className="mt-12 pt-8 border-t border-[#233554]">
+                    <p className="text-sm text-center text-gray-400 group cursor-default">
+                        <span className="relative inline-block px-4 py-2">
+                            © {new Date().getFullYear()} PhishFortress. Built for educational purposes.
+                            <span className="absolute inset-0 rounded-lg border border-[#64ffda]/0 group-hover:border-[#64ffda]/20 transition-all duration-300"></span>
+                        </span>
+                    </p>
                 </div>
             </div>
         </footer>

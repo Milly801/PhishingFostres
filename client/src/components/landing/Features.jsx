@@ -36,9 +36,9 @@ export function Features() {
                         <div className="w-12 h-12 rounded-lg bg-[#233554] flex items-center justify-center mb-4 group-hover:bg-[#64ffda]/20 transition-colors">
                             <Shield className="h-6 w-6 text-[#64ffda]" />
                         </div>
-                        <h3 className="text-xl font-bold mb-3">Real-time Threat Detection</h3>
+                        <h3 className="text-xl font-bold mb-3">Interactive Training</h3>
                         <p className="text-gray-400">
-                            Our AI-powered system continuously monitors for suspicious emails and provides instant alerts.
+                            Practice identifying phishing attempts through hands-on examples and learn key security indicators.
                         </p>
                     </div>
                 </div>
