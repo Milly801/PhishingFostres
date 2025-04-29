@@ -12,6 +12,7 @@ import { Footer } from './components/landing/Footer';
 import { AuthButtons } from './components/auth/AuthButtons';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
+import { HashLoader } from "react-spinners";
 
 function App() {
   const { isLoading, isAuthenticated, user, loginWithRedirect, getAccessTokenSilently, logout } = useAuth0();
@@ -41,7 +42,12 @@ function App() {
   }, [isAuthenticated, navigate]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="fixed inset-0 bg-gradient-to-b from-[#0a192f] to-[#112240] flex items-center justify-center flex-col">
+        <HashLoader color="#64ffda" size={50} />
+        <p className="text-[#64ffda] mt-4 font-mono">Securing Connection...</p>
+      </div>
+    );
   }
 
   const handleGetStarted = () => {
