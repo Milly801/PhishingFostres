@@ -6,35 +6,27 @@ import { Hero } from './components/landing/Hero';
 import { Stats } from './components/landing/Stats';
 import { Features } from './components/landing/Features';
 import { HowItWorks } from './components/landing/HowItWorks';
-import { Testimonials } from './components/landing/Testimonials';
+import { WhyChooseUs } from './components/landing/WhyChooseUs';
 import { CTA } from './components/landing/CTA';
 import { Footer } from './components/landing/Footer';
-import { AuthButtons } from './components/auth/AuthButtons';
 import './App.css';
+import { useNavigate } from 'react-router-dom';
+import { HashLoader } from "react-spinners";
 
 function App() {
-  const { isLoading, isAuthenticated, user, loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
+  const { isLoading, isAuthenticated, user, loginWithRedirect, getAccessTokenSilently, logout } = useAuth0();
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleAuthentication = async () => {
       if (isAuthenticated && user) {
         try {
           const token = await getAccessTokenSilently();
-          try {
-            await authService.login(token);
-            // If login succeeds, user exists
-            console.log('Login successful');
-          } catch (loginError) {
-            if (loginError.status === 404) {
-              await authService.signup(token);
-              console.log('Signup successful');
-            } else {
-              throw loginError;
-            }
-          }
+          await authService.signup(token);
+          console.log('Signup (or get existing user) successful');
         } catch (error) {
-          setError(error.detail || 'An error occurred during authentication');
+          setError(error.detail || error.message || 'An error occurred during authentication');
         }
       }
     };
@@ -42,42 +34,58 @@ function App() {
     handleAuthentication();
   }, [isAuthenticated, user, getAccessTokenSilently]);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/simulation/start', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="fixed inset-0 bg-gradient-to-b from-[#0a192f] to-[#112240] flex items-center justify-center flex-col">
+        <HashLoader color="#64ffda" size={50} />
+        <p className="text-[#64ffda] mt-4 font-mono">Securing Connection...</p>
+      </div>
+    );
   }
 
   const handleGetStarted = () => {
     loginWithRedirect();
   };
   const handleWatchDemo = () => {
-    // Add demo functionality here
     console.log('Watch demo clicked');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100">
-      {!isAuthenticated? (
-        <>
-        <Navigation onGetStarted={handleGetStarted} />
-        <Hero onGetStarted={handleGetStarted} onWatchDemo={handleWatchDemo} />
-        <Stats />
-        <Features />
-        <HowItWorks />
-        <Testimonials />
-          <CTA
-            onGetStarted={() => loginWithRedirect()}
-            onScheduleDemo={() => {/* Add demo scheduling functionality */ }}
-          />
-          <Footer />
-        </>
-      ) : (
-          <div className="auth-container">
-            <h1>Welcome to PhishingFortress</h1>
-            {error && <div className="error">{error}</div>}
-            <AuthButtons />
-          </div>
+      <Navigation onGetStarted={handleGetStarted} />
+      <Hero onGetStarted={handleGetStarted} onWatchDemo={handleWatchDemo} />
+      <Stats />
+      <Features />
+      <HowItWorks />
+      <WhyChooseUs />
+      <CTA
+        onGetStarted={handleGetStarted}
+      />
+      <Footer />
+      {isAuthenticated && (
+        <div className="auth-container mt-8 text-center">
+          <h2>Welcome{user && user.name ? `, ${user.name}` : ''}!</h2>
+          {error && <div className="error">{error}</div>}
+          <button
+            className="mt-4 px-6 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-bold text-lg hover:bg-[#4cceac] transition-colors"
+            onClick={() => navigate("/simulation/start")}
+          >
+            Start Simulation
+          </button>
+          <button
+            className="mt-4 ml-4 px-6 py-3 rounded-md bg-red-500 text-white font-bold text-lg hover:bg-red-700 transition-colors"
+            onClick={() => logout({ returnTo: window.location.origin })}
+          >
+            Log Out
+          </button>
+        </div>
       )}
-
     </div>
   );
 }

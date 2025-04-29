@@ -1,5 +1,5 @@
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Index
 from sqlalchemy.sql import func
 from sqlalchemy.sql.sqltypes import DateTime,Text
 from server.models.base import Base
@@ -15,6 +15,10 @@ class User(Base):
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
 
+    __table_args = (
+        Index('idx_users_email', 'email'),
+        Index('idx_users_auth0_id', 'auth0_id')
+    )
 
     def __str__(self):
         return (

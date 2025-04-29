@@ -20,11 +20,11 @@ export const authService = {
     }
   },
 
-  async login(token, email) {
+  async login(token) {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/users/auth/login`,
-        { email },
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -2,3 +2,4 @@ __pycache__/
 .env
 phish_dev/
 data.csv
+add_indexes.py

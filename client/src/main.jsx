@@ -4,6 +4,10 @@ import { createRoot } from 'react-dom/client'
 import { Auth0Provider } from '@auth0/auth0-react'
 import App from './App.jsx'
 import './styles/globals.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SimulationStart from "./components/simulation/SimulationStart";
+import EmailSimulation from "./components/simulation/EmailSimulation";
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Auth0Provider
@@ -15,7 +19,13 @@ createRoot(document.getElementById('root')).render(
         scope: "openid profile email"
       }}
     >
-      <App />
+      <Router>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/simulation/start" element={<SimulationStart />} />
+          <Route path="/simulation" element={<EmailSimulation />} />
+        </Routes>
+      </Router>
     </Auth0Provider>
   </StrictMode>,
 )

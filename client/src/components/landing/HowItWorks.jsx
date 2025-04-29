@@ -41,15 +41,14 @@ export function HowItWorks() {
                             <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-[#64ffda] text-[#0a192f] flex items-center justify-center font-bold text-lg">
                                 3
                             </div>
-                            <h3 className="text-xl font-bold mb-3 mt-4">Protect</h3>
+                            <h3 className="text-xl font-bold mb-3 mt-4">Learn & Improve</h3>
                             <p className="text-gray-400">
-                                Our continuous monitoring system identifies and blocks real phishing attempts before they reach your
-                                inbox.
+                                Get instant feedback on your decisions and learn how to better identify phishing attempts through practical examples and explanations.
                             </p>
                         </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </section>
+        </section>
     )
 }
