@@ -18,7 +18,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.2",
-    "react-spinners": "^0.17.0"
+    "react-spinners": "^0.17.0",
+    "vercel": "^41.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

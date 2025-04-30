@@ -46,9 +46,9 @@ export function HowItWorks() {
                                 Get instant feedback on your decisions and learn how to better identify phishing attempts through practical examples and explanations.
                             </p>
                         </div>
-                    </div>
-                </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
     )
 }
