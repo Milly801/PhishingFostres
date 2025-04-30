@@ -163,22 +163,22 @@ const EmailSimulation = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100 py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-8">
           <button
             onClick={() => navigate("/")}
-            className="text-gray-400 hover:text-[#64ffda] transition-colors flex items-center text-sm"
+            className="text-gray-400 hover:text-[#64ffda] transition-colors flex items-center text-xs sm:text-sm"
           >
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Back to Home
+            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            Back
           </button>
           <div className="flex items-center">
-            <Shield className="h-8 w-8 text-[#64ffda] mr-2" />
-            <h1 className="text-2xl font-bold">
+            <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-[#64ffda] mr-2" />
+            <h1 className="text-xl sm:text-2xl font-bold">
               PhishFortress <span className="text-[#64ffda]">Simulator</span>
             </h1>
           </div>
-          <div className="bg-[#233554] px-4 py-2 rounded-lg">
-            <span className="text-sm">Score: </span>
+          <div className="bg-[#233554] px-3 py-1 sm:px-4 sm:py-2 rounded-lg">
+            <span className="text-xs sm:text-sm">Score: </span>
             <span className="text-[#64ffda] font-bold">
               {score}/{mockEmails.length}
             </span>
@@ -189,26 +189,26 @@ const EmailSimulation = () => {
           <>
             <div className="bg-[#112240] rounded-lg border border-[#233554] shadow-lg overflow-hidden mb-6">
               {/* Email Header */}
-              <div className="bg-[#0a192f] p-4 border-b border-[#233554]">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+              <div className="bg-[#0a192f] p-3 sm:p-4 border-b border-[#233554]">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-2 sm:mb-4">
                   <div>
-                    <h2 className="text-xl font-bold">{currentEmail.subject}</h2>
+                    <h2 className="text-lg sm:text-xl font-bold">{currentEmail.subject}</h2>
                     <div className="flex items-center mt-1">
-                      <User className="h-4 w-4 text-[#64ffda] mr-2" />
-                      <span className="font-medium mr-1">{currentEmail.sender.name}</span>
-                      <span className="text-gray-400 text-sm">&lt;{currentEmail.sender.email}&gt;</span>
+                      <User className="h-3 w-3 sm:h-4 sm:w-4 text-[#64ffda] mr-2" />
+                      <span className="font-medium mr-1 text-sm sm:text-base">{currentEmail.sender.name}</span>
+                      <span className="text-gray-400 text-xs sm:text-sm">&lt;{currentEmail.sender.email}&gt;</span>
                     </div>
                   </div>
-                  <div className="mt-2 md:mt-0 flex items-center">
-                    <Clock className="h-4 w-4 text-gray-400 mr-1" />
-                    <span className="text-sm text-gray-400">{currentEmail.date}</span>
+                  <div className="mt-1 md:mt-0 flex items-center">
+                    <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mr-1" />
+                    <span className="text-xs sm:text-sm text-gray-400">{currentEmail.date}</span>
                   </div>
                 </div>
-                <div className="flex items-center text-sm text-gray-400">
+                <div className="flex items-center text-xs sm:text-sm text-gray-400">
                   <span className="mr-2">To: {currentEmail.recipient}</span>
                   {currentEmail.hasAttachment && (
-                    <div className="flex items-center ml-4">
-                      <Paperclip className="h-4 w-4 mr-1" />
+                    <div className="flex items-center ml-2 sm:ml-4">
+                      <Paperclip className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       <span>{currentEmail.attachmentName}</span>
                     </div>
                   )}
@@ -216,26 +216,26 @@ const EmailSimulation = () => {
               </div>
 
               {/* Email Body */}
-              <div className="p-6 bg-[#1a2942] min-h-[300px]">
+              <div className="p-4 sm:p-6 bg-[#1a2942] min-h-[200px] sm:min-h-[300px]">
                 <div
-                  className="prose prose-invert max-w-none"
+                  className="prose prose-invert max-w-none text-sm sm:text-base"
                   dangerouslySetInnerHTML={{ __html: currentEmail.body }}
                 ></div>
               </div>
             </div>
 
             {/* Decision Buttons */}
-            <div className="mb-8">
-              <p className="text-center mb-4 text-lg">Is this email legitimate or a phishing attempt?</p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <div className="mb-6 sm:mb-8">
+              <p className="text-center mb-3 sm:mb-4 text-base sm:text-lg">Is this email legitimate or a phishing attempt?</p>
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                 <button
                   onClick={() => handleSelection(false)}
                   disabled={showFeedback}
-                  className={`px-6 py-3 rounded-md font-medium flex items-center justify-center transition-colors ${selectedOption === false
-                      ? showFeedback && isCorrect
-                        ? "bg-green-500 text-white"
-                        : "bg-red-500 text-white"
-                      : "bg-[#233554] text-white hover:bg-[#2c4269]"
+                  className={`px-4 sm:px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-medium flex items-center justify-center transition-colors ${selectedOption === false
+                    ? showFeedback && isCorrect
+                      ? "bg-green-500 text-white"
+                      : "bg-red-500 text-white"
+                    : "bg-[#233554] text-white hover:bg-[#2c4269]"
                     }`}
                 >
                   {selectedOption === false && showFeedback && (
@@ -246,11 +246,11 @@ const EmailSimulation = () => {
                 <button
                   onClick={() => handleSelection(true)}
                   disabled={showFeedback}
-                  className={`px-6 py-3 rounded-md font-medium flex items-center justify-center transition-colors ${selectedOption === true
-                      ? showFeedback && isCorrect
-                        ? "bg-green-500 text-white"
-                        : "bg-red-500 text-white"
-                      : "bg-[#233554] text-white hover:bg-[#2c4269]"
+                  className={`px-4 sm:px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-medium flex items-center justify-center transition-colors ${selectedOption === true
+                    ? showFeedback && isCorrect
+                      ? "bg-green-500 text-white"
+                      : "bg-red-500 text-white"
+                    : "bg-[#233554] text-white hover:bg-[#2c4269]"
                     }`}
                 >
                   {selectedOption === true && showFeedback && (
@@ -265,7 +265,7 @@ const EmailSimulation = () => {
             {/* Feedback */}
             {showFeedback && (
               <div
-                className={`mb-8 p-4 rounded-lg border ${isCorrect ? "bg-green-900/20 border-green-700" : "bg-red-900/20 border-red-700"
+                className={`mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg border ${isCorrect ? "bg-green-900/20 border-green-700" : "bg-red-900/20 border-red-700"
                   }`}
               >
                 <h3 className="text-lg font-bold mb-2 flex items-center">
@@ -302,7 +302,7 @@ const EmailSimulation = () => {
               <div className="flex justify-center">
                 <button
                   onClick={handleNext}
-                  className="px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors flex items-center"
+                  className="px-6 sm:px-8 py-2 sm:py-3 rounded-md text-sm sm:text-base bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors flex items-center"
                 >
                   {currentEmailIndex < mockEmails.length - 1 ? (
                     <>
