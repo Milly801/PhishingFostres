@@ -2,16 +2,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
-from models.base import Base
-from models.emailscenario_model import EmailScenario
-from models.user_model import User
+from server.models.base import Base
+from server.models.emailscenario_model import EmailScenario
+from server.models.user_model import User
 import pandas as pd
 import re
 
 load_dotenv()
 
 connection_str = os.environ.get('DB_URL')
-engine = create_engine(connection_str)
+engine = create_engine(connection_str,  pool_pre_ping=True)
 DBSession = sessionmaker(bind=engine)
 
 ph_session = DBSession()
