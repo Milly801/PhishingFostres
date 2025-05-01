@@ -201,6 +201,22 @@
     --tw-prose-td-borders: #374151;
   }
 
+  .email-body {
+    line-height: 1.6;
+  }
+
+  .original-thread {
+    font-family: monospace;
+    white-space: pre-wrap;
+    color: #94a3b8;
+    font-size: 0.875rem;
+  }
+
+  .signature {
+    color: #94a3b8;
+    font-style: italic;
+  }
+
 
   @keyframes float {
     0% {
@@ -283,4 +299,86 @@
   .animate-fade-in-left {
     animation: fade-in-left 1s ease-out;
   }
+}
+
+/* Custom scrollbar styling */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #233554;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #64ffda;
+}
+
+/* Email content styles */
+.email-body {
+  line-height: 1.6;
+}
+
+
+.email-body .main-content {
+  padding-right: 2rem;
+}
+
+.email-body blockquote {
+  border-left: 2px solid #233554;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #94a3b8;
+}
+
+/* Add support for prose styling */
+.prose {
+  max-width: none;
+}
+
+.prose pre {
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+}
+
+.prose blockquote {
+  font-style: normal;
+  border-left-color: #233554;
+}
+
+.original-thread {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #233554;
+}
+
+.signature {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #233554;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Hide scrollbar for cleaner look but keep functionality */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari and Opera */
 }

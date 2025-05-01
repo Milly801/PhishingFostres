@@ -52,22 +52,23 @@ class EmailScenarioRepo:
             found_scenarios = self.db.query(EmailScenario).filter(EmailScenario.is_phishing == phishing_stat).all()
             return self.format_scenarios(found_scenarios)
 
-    @lru_cache(maxsize=32)  # Cache up to 32 different count values
-    def get_randomized_emails_by_phishing_stat(self, count: int = 10):
-        """Get random emails with caching"""
+    @lru_cache(maxsize=32)
+    def get_randomized_emails_by_phishing_stat(self, page: int = 1, per_page: int = 1):
+        """Get random emails with caching and pagination"""
         with self.query_performance("total_operation"):
-            
             if self._should_reset_cache():
                 self.reset_cache()
                 print("Cache reset due to timeout")
 
-            phish_count = count // 2
-            legit_count = count - phish_count
+            # Calculate how many phishing vs legitimate emails we want
+            phish_count = per_page // 2
+            legit_count = per_page - phish_count
 
             with self.query_performance("fetch_phishing"):
                 phished_emails = (self.db.query(EmailScenario)
                               .filter(EmailScenario.is_phishing == 1)
                               .order_by(func.random())
+                              .offset((page - 1) * phish_count)
                               .limit(phish_count)
                               .all())
 
@@ -75,10 +76,31 @@ class EmailScenarioRepo:
                 legit_emails = (self.db.query(EmailScenario)
                             .filter(EmailScenario.is_phishing == 0)
                             .order_by(func.random())
+                            .offset((page - 1) * legit_count)
                             .limit(legit_count)
                             .all())
+
+            with self.query_performance("fetch_total_counts"):
+                total_phish = (self.db.query(func.count(EmailScenario.id))
+                            .filter(EmailScenario.is_phishing == 1)
+                            .scalar())
+                total_legit = (self.db.query(func.count(EmailScenario.id))
+                            .filter(EmailScenario.is_phishing == 0)
+                            .scalar())
 
             with self.query_performance("format_results"):
                 formatted_results = self.format_scenarios(phished_emails + legit_emails)
 
-            return formatted_results
+            return {
+                "data": formatted_results,
+                "pagination": {
+                    "current_page": page,
+                    "per_page": per_page,
+                    "total_items": total_phish + total_legit,
+                    "total_pages": -((total_phish + total_legit) // per_page),
+                    "stats": {
+                        "phishing_emails": total_phish,
+                        "legitimate_emails": total_legit
+                    }
+                }
+            }

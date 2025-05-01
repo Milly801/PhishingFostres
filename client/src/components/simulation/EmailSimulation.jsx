@@ -1,135 +1,153 @@
 "use client"
-
-import { useState } from "react"
-import { Shield, AlertTriangle, ChevronRight, User, Clock, Paperclip, Check, X, ArrowLeft } from "lucide-react"
+import { HashLoader } from "react-spinners"
+import "../../styles/globals.css"
+import { useState, useEffect, useRef } from "react"
+import { Shield, AlertTriangle, ChevronRight, User, Clock, Paperclip, Check, X, ArrowLeft, ChevronLeft } from "lucide-react"
 import { useNavigate } from "react-router-dom"
-
-// Mock email data
-const mockEmails = [
-  {
-    id: 1,
-    sender: {
-      name: "PayPal Customer Service",
-      email: "service@paypa1.com", // Subtle misspelling (1 instead of l)
-    },
-    recipient: "user@company.com",
-    subject: "Urgent: Your account has been limited",
-    date: "Today, 10:23 AM",
-    body: `<p>Dear Valued Customer,</p>
-    <p>We've noticed some unusual activity on your PayPal account. Your account has been temporarily limited until we can verify your identity.</p>
-    <p>Please click the link below to verify your information and restore full access to your account:</p>
-    <p><a href="#" style="color: #0070ba;">https://secure.paypa1.com/verify-account</a></p>
-    <p>If you don't verify your account within 24 hours, your account will be permanently limited.</p>
-    <p>Thank you for your cooperation.</p>
-    <p>PayPal Customer Service Team</p>`,
-    hasAttachment: false,
-    isPhishing: true,
-    phishingIndicators: [
-      "Misspelled sender email (paypa1.com instead of paypal.com)",
-      "Creates urgency with threats of account limitation",
-      "Contains suspicious link",
-      "Generic greeting",
-    ],
-  },
-  {
-    id: 2,
-    sender: {
-      name: "Microsoft 365 Team",
-      email: "no-reply@microsoft.com",
-    },
-    recipient: "user@company.com",
-    subject: "Your Microsoft 365 subscription is expiring soon",
-    date: "Yesterday, 4:15 PM",
-    body: `<p>Hello,</p>
-    <p>Your Microsoft 365 subscription will expire in 3 days. To ensure uninterrupted access to your services, please renew your subscription now.</p>
-    <p>Click here to renew: <a href="#" style="color: #0078d4;">https://login.microsoftonline.com</a></p>
-    <p>If you've already renewed, please disregard this message.</p>
-    <p>Thank you,<br>Microsoft 365 Team</p>`,
-    hasAttachment: false,
-    isPhishing: false,
-    phishingIndicators: [],
-  },
-  {
-    id: 3,
-    sender: {
-      name: "HR Department",
-      email: "hr@company-benefits.net",
-    },
-    recipient: "user@company.com",
-    subject: "Important: New Benefits Enrollment Form",
-    date: "May 15, 2:30 PM",
-    body: `<p>Dear Employee,</p>
-    <p>Please find attached the new benefits enrollment form for the upcoming fiscal year. This form must be completed by all employees.</p>
-    <p>To access your benefits, please download and open the attached file: <strong>Benefits_Form_2023.exe</strong></p>
-    <p>Complete the form by Friday to ensure your benefits continue without interruption.</p>
-    <p>Best regards,<br>Human Resources</p>`,
-    hasAttachment: true,
-    attachmentName: "Benefits_Form_2023.exe",
-    isPhishing: true,
-    phishingIndicators: [
-      "Suspicious sender domain (not your company's domain)",
-      "Executable file attachment (.exe)",
-      "Creates urgency",
-      "Generic greeting",
-    ],
-  },
-  {
-    id: 4,
-    sender: {
-      name: "Jane Smith",
-      email: "j.smith@company.com",
-    },
-    recipient: "user@company.com",
-    subject: "Meeting notes from yesterday",
-    date: "May 14, 9:45 AM",
-    body: `<p>Hi there,</p>
-    <p>Attached are the meeting notes from yesterday's project status update. Please review them and let me know if you have any questions or if I missed anything important.</p>
-    <p>We need to follow up on the action items by next week.</p>
-    <p>Thanks,<br>Jane</p>`,
-    hasAttachment: true,
-    attachmentName: "Meeting_Notes_May13.pdf",
-    isPhishing: false,
-    phishingIndicators: [],
-  },
-  {
-    id: 5,
-    sender: {
-      name: "Amazon",
-      email: "order-confirmation@amazon.com",
-    },
-    recipient: "user@company.com",
-    subject: "Your Amazon.com order #402-5798231-4563901",
-    date: "May 10, 11:20 AM",
-    body: `<p>Hello,</p>
-    <p>Thank you for your order. We'll send a confirmation when your item ships.</p>
-    <p><strong>Order Details:</strong><br>
-    Order #402-5798231-4563901<br>
-    Placed on May 10, 2023</p>
-    <p><strong>1x</strong> Wireless Bluetooth Headphones - $79.99<br>
-    <strong>Subtotal:</strong> $79.99<br>
-    <strong>Shipping:</strong> $0.00 (Prime)<br>
-    <strong>Tax:</strong> $6.40<br>
-    <strong>Total:</strong> $86.39</p>
-    <p>Your order will be sent to:<br>
-    John Doe<br>
-    123 Main St<br>
-    Anytown, ST 12345</p>
-    <p>View or manage your order: <a href="#" style="color: #0066c0;">https://www.amazon.com/orders</a></p>`,
-    hasAttachment: false,
-    isPhishing: false,
-    phishingIndicators: [],
-  },
-]
+import axios from "axios"
 
 const EmailSimulation = () => {
   const navigate = useNavigate()
+  const [emails, setEmails] = useState([])
   const [currentEmailIndex, setCurrentEmailIndex] = useState(0)
   const [selectedOption, setSelectedOption] = useState(null)
   const [showFeedback, setShowFeedback] = useState(false)
   const [score, setScore] = useState(0)
   const [completed, setCompleted] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const currentEmail = mockEmails[currentEmailIndex]
+  const API_BASE_URL = 'http://127.0.0.1:8000'
+
+  const formatApiEmailData = (apiEmail) => {
+    if (!apiEmail) {
+      throw new Error('Invalid email data received')
+    }
+
+    return {
+      id: apiEmail.id || 'unknown',
+      sender: {
+        name: apiEmail.sender?.name || 'Unknown Sender',
+        email: apiEmail.sender?.email || 'no-email@example.com',
+      },
+      recipient: Array.isArray(apiEmail.receiver?.emails)
+        ? apiEmail.receiver.emails[0]
+        : apiEmail.receiver?.emails || 'unknown@example.com',
+      subject: apiEmail.subject || 'No Subject',
+      date: apiEmail.created_at
+        ? new Date(apiEmail.created_at).toLocaleString()
+        : new Date().toLocaleString(),
+      body: formatEmailBody(apiEmail.body || {}),
+      isPhishing: Boolean(apiEmail.is_phishing), // Ensure boolean
+    }
+  }
+
+  // Helper function to format the email body nicely
+  const formatEmailBody = (bodyContent) => {
+    const { main, signature, original_thread } = bodyContent;
+
+    // Convert newlines to <br> and maintain formatting
+    const formattedMain = main.replace(/\n/g, '<br>');
+    const formattedSignature = signature ? signature.replace(/\n/g, '<br>') : '';
+    const formattedThread = original_thread ? original_thread.replace(/\n/g, '<br>').replace(/^/gm, '> ') : '';
+
+    return `
+    <div class="email-body">
+      <div class="main-content">
+        ${formattedMain}
+      </div>
+      ${signature ? `
+        <div class="signature text-gray-400 mt-4 border-t border-gray-700 pt-4">
+          ${formattedSignature}
+        </div>
+      ` : ''}
+      ${original_thread ? `
+        <div class="original-thread text-gray-400 mt-4 border-t border-gray-700 pt-4 text-sm">
+          <div class="font-medium mb-2">Original Thread:</div>
+          <div class="whitespace-pre-line">${formattedThread}</div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+  }
+
+  // Fetch emails only once at component mount
+  useEffect(() => {
+    const fetchEmails = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const response = await axios.get(
+          `${API_BASE_URL}/email_s/simulated_emails?page=1&per_page=5`
+        )
+
+        if (!response.data || !response.data.data) {
+          throw new Error('Invalid response format from server')
+        }
+
+        const formattedEmails = response.data.data.map(formatApiEmailData)
+
+        if (!formattedEmails || formattedEmails.length === 0) {
+          throw new Error('No emails received from server')
+        }
+
+        setEmails(formattedEmails)
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching emails:', error)
+        setError(error.message || 'Failed to fetch emails')
+        setLoading(false)
+      }
+    }
+
+    fetchEmails()
+  }, []) // Empty dependency array means this runs once on mount
+
+  const currentEmail = emails[currentEmailIndex]
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100 flex items-center justify-center">
+        <div className="bg-[#112240] rounded-lg border border-red-500 p-8 max-w-md mx-auto text-center">
+          <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold mb-4">Error Loading Simulation</h2>
+          <p className="text-gray-300 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-[#64ffda] text-[#0a192f] rounded-md hover:bg-[#4cceac] transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-gradient-to-b from-[#0a192f] to-[#112240] flex items-center justify-center flex-col">
+        <HashLoader color="#64ffda" size={50} />
+        <p className="text-[#64ffda] mt-4 font-mono">Securing Connection...</p>
+      </div>
+    );
+  }
+
+  if (!currentEmail) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100 flex items-center justify-center">
+        <div className="bg-[#112240] rounded-lg border border-[#233554] p-8 text-center">
+          <h2 className="text-xl font-bold mb-4">No Emails Available</h2>
+          <p className="text-gray-300 mb-4">Please try again later.</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-[#64ffda] text-[#0a192f] rounded-md hover:bg-[#4cceac] transition-colors"
+          >
+            Reload
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   const handleSelection = (isPhishing) => {
     setSelectedOption(isPhishing)
@@ -141,7 +159,7 @@ const EmailSimulation = () => {
   }
 
   const handleNext = () => {
-    if (currentEmailIndex < mockEmails.length - 1) {
+    if (currentEmailIndex < emails.length - 1) {
       setCurrentEmailIndex(currentEmailIndex + 1)
       setSelectedOption(null)
       setShowFeedback(false)
@@ -159,6 +177,108 @@ const EmailSimulation = () => {
   }
 
   const isCorrect = selectedOption === currentEmail.isPhishing
+
+  // Add progress indicator
+  const renderProgress = () => (
+    <div className="flex justify-center mb-4">
+      {emails.map((_, index) => (
+        <div
+          key={index}
+          className={`w-3 h-3 rounded-full mx-1 transition-all duration-300 ${index === currentEmailIndex
+            ? 'bg-[#64ffda] scale-125'
+            : index < currentEmailIndex
+              ? 'bg-[#233554] opacity-50'
+              : 'bg-[#233554]'
+            }`}
+        />
+      ))}
+    </div>
+  )
+
+  // Create a new PaginatedEmailBody component
+  const PaginatedEmailBody = ({ body }) => {
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+    const containerRef = useRef(null);
+    const contentRef = useRef(null);
+
+    // Calculate total pages on mount and when content changes
+    useEffect(() => {
+      if (containerRef.current && contentRef.current) {
+        const contentHeight = contentRef.current.scrollHeight;
+        const containerHeight = 400; // Fixed container height
+        const pages = Math.ceil(contentHeight / containerHeight);
+        setTotalPages(pages);
+      }
+    }, [body]);
+
+    return (
+      <div className="relative">
+        <div
+          ref={containerRef}
+          className="h-[400px] overflow-hidden relative bg-[#1a2942] group"
+        >
+          <div
+            ref={contentRef}
+            className="transition-transform duration-500 ease-in-out h-full"
+            style={{
+              transform: `translateY(-${currentPage * 400}px)`,
+            }}
+          >
+            <div
+              className="prose prose-invert max-w-none text-sm sm:text-base p-4 sm:p-6"
+              dangerouslySetInnerHTML={{ __html: body }}
+            />
+          </div>
+
+          <div className="absolute inset-y-0 right-0 flex items-center">
+            {currentPage < totalPages - 1 && (
+              <button
+                onClick={() => setCurrentPage(prev => prev + 1)}
+                className="h-full px-2 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-gradient-to-l hover:from-[#1a2942]/80 hover:to-transparent"
+                aria-label="Next page"
+              >
+                <ChevronRight className="h-5 w-5 text-[#64ffda]/70 hover:text-[#64ffda] transition-colors" />
+              </button>
+            )}
+          </div>
+          <div className="absolute inset-y-0 left-0 flex items-center">
+            {currentPage > 0 && (
+              <button
+                onClick={() => setCurrentPage(prev => prev - 1)}
+                className="h-full px-2 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-gradient-to-r hover:from-[#1a2942]/80 hover:to-transparent"
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="h-5 w-5 text-[#64ffda]/70 hover:text-[#64ffda] transition-colors" />
+              </button>
+            )}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index)}
+                  className={`transition-all duration-300 ${currentPage === index
+                      ? 'w-6 h-1 bg-[#64ffda]/70'
+                      : 'w-1 h-1 bg-[#233554] hover:bg-[#64ffda]/40'
+                    } rounded-full`}
+                  aria-label={`Go to page ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="absolute top-2 right-2 text-xs text-gray-400/80 bg-[#0a192f]/20 px-2 py-1 rounded-sm backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              {currentPage + 1} / {totalPages}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100 py-12 px-4">
@@ -180,15 +300,16 @@ const EmailSimulation = () => {
           <div className="bg-[#233554] px-3 py-1 sm:px-4 sm:py-2 rounded-lg">
             <span className="text-xs sm:text-sm">Score: </span>
             <span className="text-[#64ffda] font-bold">
-              {score}/{mockEmails.length}
+              {score}/{emails.length}
             </span>
           </div>
         </div>
 
         {!completed ? (
           <>
+            {renderProgress()}
+
             <div className="bg-[#112240] rounded-lg border border-[#233554] shadow-lg overflow-hidden mb-6">
-              {/* Email Header */}
               <div className="bg-[#0a192f] p-3 sm:p-4 border-b border-[#233554]">
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-2 sm:mb-4">
                   <div>
@@ -215,16 +336,9 @@ const EmailSimulation = () => {
                 </div>
               </div>
 
-              {/* Email Body */}
-              <div className="p-4 sm:p-6 bg-[#1a2942] min-h-[200px] sm:min-h-[300px]">
-                <div
-                  className="prose prose-invert max-w-none text-sm sm:text-base"
-                  dangerouslySetInnerHTML={{ __html: currentEmail.body }}
-                ></div>
-              </div>
+              <PaginatedEmailBody body={currentEmail.body} />
             </div>
 
-            {/* Decision Buttons */}
             <div className="mb-6 sm:mb-8">
               <p className="text-center mb-3 sm:mb-4 text-base sm:text-lg">Is this email legitimate or a phishing attempt?</p>
               <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
@@ -262,7 +376,6 @@ const EmailSimulation = () => {
               </div>
             </div>
 
-            {/* Feedback */}
             {showFeedback && (
               <div
                 className={`mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg border ${isCorrect ? "bg-green-900/20 border-green-700" : "bg-red-900/20 border-red-700"
@@ -281,56 +394,42 @@ const EmailSimulation = () => {
                     </>
                   )}
                 </h3>
-                <p className="mb-2">This email is {currentEmail.isPhishing ? "a phishing attempt" : "legitimate"}.</p>
-                {currentEmail.isPhishing && currentEmail.phishingIndicators.length > 0 && (
-                  <div>
-                    <p className="font-medium mb-1">Phishing indicators:</p>
-                    <ul className="list-disc pl-5 text-sm">
-                      {currentEmail.phishingIndicators.map((indicator, index) => (
-                        <li key={index} className="mb-1">
-                          {indicator}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <p className="mb-2">
+                  This email is {currentEmail.isPhishing ? "a phishing attempt" : "legitimate"}.
+                </p>
               </div>
             )}
 
-            {/* Next Button */}
-            {showFeedback && (
-              <div className="flex justify-center">
-                <button
-                  onClick={handleNext}
-                  className="px-6 sm:px-8 py-2 sm:py-3 rounded-md text-sm sm:text-base bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors flex items-center"
-                >
-                  {currentEmailIndex < mockEmails.length - 1 ? (
-                    <>
-                      Next Email <ChevronRight className="ml-2 h-5 w-5" />
-                    </>
-                  ) : (
-                    "See Results"
-                  )}
-                </button>
-              </div>
-            )}
+            <div className="flex justify-center">
+              <button
+                onClick={handleNext}
+                className="px-6 sm:px-8 py-2 sm:py-3 rounded-md text-sm sm:text-base bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors flex items-center"
+              >
+                {currentEmailIndex < emails.length - 1 ? (
+                  <>
+                    Next Email <ChevronRight className="ml-2 h-5 w-5" />
+                  </>
+                ) : (
+                  "See Results"
+                )}
+              </button>
+            </div>
           </>
         ) : (
-          // Results screen
           <div className="bg-[#112240] rounded-lg border border-[#233554] p-8 text-center">
             <h2 className="text-2xl font-bold mb-4">Simulation Complete!</h2>
             <div className="text-6xl font-bold text-[#64ffda] mb-4">
-              {score}/{mockEmails.length}
+              {score}/{emails.length}
             </div>
             <p className="text-xl mb-6">
-              {score === mockEmails.length
+              {score === emails.length
                 ? "Perfect score! You're a phishing detection expert."
-                : score >= mockEmails.length * 0.7
+                : score >= emails.length * 0.7
                   ? "Great job! You have good phishing awareness."
                   : "You need more practice to improve your phishing detection skills."}
             </p>
             <button
-              onClick={handleRestart}
+              onClick={() => window.location.reload()}
               className="px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors"
             >
               Try Again
@@ -347,5 +446,4 @@ const EmailSimulation = () => {
     </div>
   )
 }
-
 export default EmailSimulation
