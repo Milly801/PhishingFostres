@@ -17,7 +17,7 @@ const EmailSimulation = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const API_BASE_URL = 'http://127.0.0.1:8000'
+  const API_BASE_URL = 'https://phishingfostres.onrender.com'
 
   const formatApiEmailData = (apiEmail) => {
     if (!apiEmail) {
