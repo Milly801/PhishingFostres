@@ -8,7 +8,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://phish-fostress.vercel.app/", "https://www.phishfortress.me/"],
+    allow_origins=["http://localhost:5173",
+                   "https://phish-fostress.vercel.app",
+                   "https://www.phishfortress.me",
+                   "https://phishfortress.me"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
