@@ -261,8 +261,8 @@ const EmailSimulation = () => {
                   key={index}
                   onClick={() => setCurrentPage(index)}
                   className={`transition-all duration-300 ${currentPage === index
-                      ? 'w-6 h-1 bg-[#64ffda]/70'
-                      : 'w-1 h-1 bg-[#233554] hover:bg-[#64ffda]/40'
+                    ? 'w-6 h-1 bg-[#64ffda]/70'
+                    : 'w-1 h-1 bg-[#233554] hover:bg-[#64ffda]/40'
                     } rounded-full`}
                   aria-label={`Go to page ${index + 1}`}
                 />
@@ -429,7 +429,7 @@ const EmailSimulation = () => {
                   : "You need more practice to improve your phishing detection skills."}
             </p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => navigate("/simulation/start")}
               className="px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors"
             >
               Try Again
