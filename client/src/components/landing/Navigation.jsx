@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Shield, Menu, X, BookOpen, Lightbulb, Award } from "lucide-react";
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function Navigation({ onGetStarted }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isScrolled, setIsScrolled] = useState(false)
     const [activeSection, setActiveSection] = useState("")
+    const { loginWithRedirect } = useAuth0();
 
     useEffect(() => {
         const handleScroll = () => {

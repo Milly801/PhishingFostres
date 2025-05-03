@@ -7,6 +7,8 @@ import ModuleCard from "./ModuleCard"
 import ProgressDashboard from "./ProgressDashboard"
 import RecentActivity from "./RecentActivity"
 import { useNavigate } from 'react-router-dom'
+import { useAuth0 } from '@auth0/auth0-react'
+import { UserInfoBar } from './UserInfoBar'
 
 // Mock training module data
 const trainingModules = {
@@ -118,6 +120,7 @@ const trainingModules = {
 
 const TrainingSection = ({ onBackToHome }) => {
   const [activeTab, setActiveTab] = useState("video")
+  const { isLoading } = useAuth0()
   const [searchQuery, setSearchQuery] = useState("")
   const [filteredModules, setFilteredModules] = useState({
     video: trainingModules.video,
@@ -152,6 +155,7 @@ const TrainingSection = ({ onBackToHome }) => {
   ]
 
   const navigate = useNavigate()
+  const { logout } = useAuth0()
 
   return (
     <ProgressProvider>
@@ -164,12 +168,21 @@ const TrainingSection = ({ onBackToHome }) => {
         popularModules={popularModules}
         onBackToHome={onBackToHome}
       />
-      <button
-        onClick={() => navigate('/simulation/start')}
-        className="px-6 py-3 bg-[#64ffda] text-[#0a192f] rounded-md font-medium hover:bg-[#4cceac] transition-colors mt-8"
-      >
-        Proceed to Simulation
-      </button>
+      <div className="my-12 flex flex-col items-center justify-center bg-gradient-to-r from-[#112240] to-[#0a192f] rounded-lg border border-[#233554] p-8 shadow-lg">
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          Ready to Test Your Skills?
+        </h2>
+        <p className="text-gray-400 mb-6 text-center max-w-xl">
+          You've completed the training modules. Now, put your knowledge to the test in our interactive simulation and see how well you can spot phishing attempts!
+        </p>
+        <button
+          onClick={() => navigate('/simulation/start')}
+          className="px-8 py-4 rounded-lg bg-[#64ffda] text-[#0a192f] font-bold text-lg shadow-md hover:bg-[#4cceac] transition-colors flex items-center group"
+        >
+          Proceed to Simulation
+          <Shield className="ml-3 h-6 w-6 text-[#0a192f] group-hover:text-[#233554] transition-colors" />
+        </button>
+      </div>
     </ProgressProvider>
   )
 }
@@ -189,38 +202,29 @@ const TrainingSectionContent = ({
   // Initialize module tracking
   useEffect(() => {
     initializeModules(trainingModules)
-  }, [initializeModules])
+    // eslint-disable-next-line
+  }, []) // empty dependency array
+
+  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100">
       <div className="container mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div className="flex items-center mb-4 md:mb-0">
-            <button
-              onClick={onBackToHome}
-              className="text-gray-400 hover:text-[#64ffda] transition-colors flex items-center mr-4"
-            >
-              <ArrowLeft className="h-5 w-5 mr-1" />
-              <span className="text-sm">Back</span>
-            </button>
-            <div className="flex items-center">
-              <Shield className="h-8 w-8 text-[#64ffda] mr-3" />
-              <h1 className="text-2xl md:text-3xl font-bold">
-                Security <span className="text-[#64ffda]">Training</span>
-              </h1>
-            </div>
+        <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
+          <button
+            onClick={() => navigate('/')}
+            className="text-gray-400 hover:text-[#64ffda] transition-colors flex items-center text-sm px-3 py-2 rounded-md border border-[#233554] bg-[#0a192f] hover:bg-[#112240]"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Back to Home
+          </button>
+          <div className="flex items-center space-x-2">
+            <Shield className="h-6 w-6 text-[#64ffda]" />
+            <h1 className="text-lg md:text-xl font-bold">
+              Security <span className="text-[#64ffda]">Training</span>
+            </h1>
           </div>
-          <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search training modules..."
-              className="w-full bg-[#0a192f] border border-[#233554] rounded-md py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-[#64ffda] transition-colors"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+          <UserInfoBar onSignOut={() => logout({ returnTo: window.location.origin })} />
         </div>
 
         {/* Progress Dashboard */}
@@ -285,25 +289,6 @@ const TrainingSectionContent = ({
               ))}
             </div>
           )}
-        </div>
-
-        {/* Certification Banner */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-[#112240] to-[#0a192f] rounded-lg border border-[#233554] p-6">
-          <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
-            <Shield className="w-full h-full" />
-          </div>
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
-            <div className="mb-4 md:mb-0">
-              <h3 className="text-xl font-bold mb-2">Earn Your Phishing Defense Certification</h3>
-              <p className="text-gray-400 max-w-xl">
-                Complete all training modules and pass the final assessment to receive your official PhishingFortress
-                certification.
-              </p>
-            </div>
-            <button className="px-6 py-3 bg-[#64ffda] text-[#0a192f] rounded-md font-medium hover:bg-[#4cceac] transition-colors">
-              View Certification Path
-            </button>
-          </div>
         </div>
       </div>
     </div>

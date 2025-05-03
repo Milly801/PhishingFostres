@@ -34,14 +34,6 @@ function App() {
     handleAuthentication();
   }, [isAuthenticated, user, getAccessTokenSilently]);
 
-  if (isLoading) {
-    return (
-      <div className="fixed inset-0 bg-gradient-to-b from-[#0a192f] to-[#112240] flex items-center justify-center flex-col">
-        <HashLoader color="#64ffda" size={50} />
-        <p className="text-[#64ffda] mt-4 font-mono">Securing Connection...</p>
-      </div>
-    );
-  }
 
   const handleGetStarted = () => {
     loginWithRedirect();

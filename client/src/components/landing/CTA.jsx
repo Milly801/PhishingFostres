@@ -1,6 +1,8 @@
 import { Shield, ChevronRight } from "lucide-react";
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function CTA({ onGetStarted }) {
+    const { loginWithRedirect } = useAuth0();
     return (
         <section className="py-20 bg-[#112240] relative overflow-hidden">
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#64ffda]/5 rounded-full blur-3xl"></div>
@@ -18,7 +20,7 @@ export function CTA({ onGetStarted }) {
                     </p>
 
                     <button
-                        onClick={onGetStarted}
+                        onClick={() => loginWithRedirect({ appState: { returnTo: "/training" } })}
                         className="group relative px-8 py-3 rounded-lg bg-[#64ffda] text-[#0a192f] font-medium overflow-hidden transform hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(100,255,218,0.3)]"
                     >
                         <span className="relative z-10 flex items-center justify-center">

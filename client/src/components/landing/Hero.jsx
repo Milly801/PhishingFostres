@@ -1,11 +1,10 @@
 import { Lock, ChevronRight, BookOpen, Shield } from "lucide-react"
 import protection from "../../assets/protection.jpg"
 import '../../styles/globals.css';
-import { useNavigate } from 'react-router-dom';
-import { loginWithRedirect } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function Hero({ onGetStarted, onLearnMore }) {
-    const navigate = useNavigate();
+    const { loginWithRedirect } = useAuth0();
 
     return (
         <section className="pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
@@ -25,7 +24,7 @@ export function Hero({ onGetStarted, onLearnMore }) {
                             {' '}Threats
                         </h1>
                         <p className="text-lg text-gray-400 mb-8 max-w-lg text-left transform hover:translate-x-2 transition-transform duration-300">
-                            Practice identifying phishing attempts in a safe environment through interactive examples and expert guidance.
+                            Begin your journey to mastering phishing awareness. Our interactive modules will teach you how to recognize, avoid, and respond to phishing threats in real-world scenarios. Build your skills step by step—then, when you're ready, put your knowledge to the test in our simulation challenge!
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-start">
@@ -37,7 +36,10 @@ export function Hero({ onGetStarted, onLearnMore }) {
                             </button>
 
                             <button
-                                onClick={onLearnMore}
+                                onClick={() => {
+                                    const section = document.getElementById('how-it-works');
+                                    if (section) section.scrollIntoView({ behavior: 'smooth' });
+                                }}
                                 className="group px-6 py-3 rounded-md border-2 border-[#64ffda] text-[#64ffda] font-medium
                                          hover:bg-[#64ffda]/10 transition-all duration-300 transform hover:-translate-y-1
                                          flex items-center justify-center"
