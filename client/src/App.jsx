@@ -34,12 +34,6 @@ function App() {
     handleAuthentication();
   }, [isAuthenticated, user, getAccessTokenSilently]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/simulation/start', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
-
   if (isLoading) {
     return (
       <div className="fixed inset-0 bg-gradient-to-b from-[#0a192f] to-[#112240] flex items-center justify-center flex-col">
@@ -74,9 +68,9 @@ function App() {
           {error && <div className="error">{error}</div>}
           <button
             className="mt-4 px-6 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-bold text-lg hover:bg-[#4cceac] transition-colors"
-            onClick={() => navigate("/simulation/start")}
+            onClick={() => navigate("/training")}
           >
-            Start Simulation
+            Start Training
           </button>
           <button
             className="mt-4 ml-4 px-6 py-3 rounded-md bg-red-500 text-white font-bold text-lg hover:bg-red-700 transition-colors"

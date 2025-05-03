@@ -81,8 +81,8 @@ export function Navigation({ onGetStarted }) {
 
                             {/* Enhanced Get Started Button */}
                             <button
-                                onClick={onGetStarted}
-                                className="relative px-6 py-2 rounded-lg bg-[#64ffda] text-[#0a192f] font-medium overflow-hidden group hover:shadow-[0_0_20px_rgba(100,255,218,0.3)] transition-all duration-300"
+                                onClick={() => loginWithRedirect({ appState: { returnTo: "/training" } })}
+                                className="px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors"
                             >
                                 <span className="relative z-10 flex items-center">
                                     Start Training

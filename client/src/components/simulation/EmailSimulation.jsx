@@ -429,7 +429,7 @@ const EmailSimulation = () => {
                   : "You need more practice to improve your phishing detection skills."}
             </p>
             <button
-              onClick={() => navigate("/simulation/start")}
+              onClick={() => navigate("/simulation")}
               className="px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors"
             >
               Try Again

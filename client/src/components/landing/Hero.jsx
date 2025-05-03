@@ -1,8 +1,12 @@
 import { Lock, ChevronRight, BookOpen, Shield } from "lucide-react"
 import protection from "../../assets/protection.jpg"
 import '../../styles/globals.css';
+import { useNavigate } from 'react-router-dom';
+import { loginWithRedirect } from '@auth0/auth0-react';
 
 export function Hero({ onGetStarted, onLearnMore }) {
+    const navigate = useNavigate();
+
     return (
         <section className="pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
             <div className="container mx-auto px-4 md:px-6">
@@ -26,16 +30,10 @@ export function Hero({ onGetStarted, onLearnMore }) {
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-start">
                             <button
-                                onClick={onGetStarted}
-                                className="group px-6 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium
-                                         hover:bg-[#4cceac] transition-all duration-300 transform hover:-translate-y-1
-                                         hover:shadow-[0_0_20px_rgba(100,255,218,0.3)] relative overflow-hidden"
+                                onClick={() => loginWithRedirect({ appState: { returnTo: "/training" } })}
+                                className="px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors"
                             >
-                                <span className="relative z-10 flex items-center justify-center">
-                                    <Shield className="w-4 h-4 mr-2" />
-                                    Start Training
-                                </span>
-                                <div className="absolute inset-0 bg-[#4cceac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                Start Training
                             </button>
 
                             <button
