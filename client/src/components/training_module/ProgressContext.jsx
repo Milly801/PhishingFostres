@@ -134,7 +134,7 @@ export const ProgressProvider = ({ children }) => {
   }
 
   // Update module progress
-  const updateModuleProgress = (moduleId, percentComplete) => {
+  const updateModuleProgress = (moduleId, percentComplete, currentTime = 0) => {
     setProgress((prev) => {
       const updatedModules = {
         ...prev.modules,
@@ -144,6 +144,7 @@ export const ProgressProvider = ({ children }) => {
           percentComplete: Math.min(100, Math.max(0, percentComplete)),
           lastAccessed: new Date().toISOString(),
           completed: percentComplete >= 100,
+          currentTime,
         },
       }
 
