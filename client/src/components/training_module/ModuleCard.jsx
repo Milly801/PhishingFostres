@@ -87,7 +87,7 @@ const moduleIcons = {
   ),
 }
 
-const ModuleCard = ({ module, size = "large" }) => {
+const ModuleCard = ({ module, size = "large", onClick }) => {
   const { progress, startModule } = useProgress()
   const moduleProgress = progress.modules[module.id] || {
     started: false,
@@ -109,9 +109,12 @@ const ModuleCard = ({ module, size = "large" }) => {
 
   return (
     <div
-      className={`bg-[#112240] border border-[#233554] rounded-lg overflow-hidden hover:border-[#64ffda] transition-all duration-300 transform hover:-translate-y-1 group relative ${
-        moduleProgress.completed ? "border-green-500 border-opacity-50" : ""
-      }`}
+      className={`bg-[#112240] border border-[#233554] rounded-lg overflow-hidden hover:border-[#64ffda] transition-all duration-300 transform hover:-translate-y-1 group relative ${moduleProgress.completed ? "border-green-500 border-opacity-50" : ""
+        } cursor-pointer`}
+      onClick={module.type === "video" && onClick ? onClick : undefined}
+      tabIndex={0}
+      role="button"
+      aria-label={`Open module: ${module.title}`}
     >
       {/* Completion Badge */}
       {moduleProgress.completed && (
@@ -130,15 +133,24 @@ const ModuleCard = ({ module, size = "large" }) => {
       {module.type === "video" ? (
         <div className={`relative ${size === "large" ? "h-48" : "h-36"}`}>
           <img src={module.thumbnail || "/placeholder.svg"} alt={module.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-[#0a192f]/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <div className="w-14 h-14 rounded-full bg-[#64ffda]/90 flex items-center justify-center">
+          {/* Play button overlay */}
+          <button
+            className="absolute inset-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 rounded-md text-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={e => {
+              e.stopPropagation()
+              onClick && onClick()
+            }}
+            aria-label={`Play video: ${module.title}`}
+            type="button"
+          >
+            <span className="w-14 h-14 rounded-full bg-[#64ffda]/90 flex items-center justify-center">
               {moduleProgress.started && !moduleProgress.completed ? (
                 <Pause className="h-7 w-7 text-[#0a192f]" />
               ) : (
                 <Play className="h-7 w-7 text-[#0a192f] ml-1" />
               )}
-            </div>
-          </div>
+            </span>
+          </button>
           <div className="absolute bottom-2 right-2 bg-[#0a192f]/80 text-xs px-2 py-1 rounded flex items-center">
             <Clock className="h-3 w-3 mr-1" />
             {module.duration}
@@ -160,23 +172,42 @@ const ModuleCard = ({ module, size = "large" }) => {
         <p className="text-gray-400 text-sm mb-5">{module.description}</p>
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-400">{module.type === "video" ? module.duration : module.readTime}</span>
-          <button
-            onClick={moduleProgress.started && !moduleProgress.completed ? handleResumeModule : handleStartModule}
-            className={`px-4 py-2 text-sm rounded-md transition-colors flex items-center ${
-              moduleProgress.completed
+          {module.type === "video" ? (
+            <button
+              className={`px-4 py-2 text-sm rounded-md transition-colors flex items-center ${moduleProgress.completed
                 ? "bg-green-600 hover:bg-green-700 text-white"
                 : "bg-[#233554] hover:bg-[#2c4269] text-white"
-            }`}
-          >
-            {moduleProgress.completed
-              ? "Review Again"
-              : moduleProgress.started
-                ? `Resume (${moduleProgress.percentComplete}%)`
-                : module.type === "video"
-                  ? "Watch Video"
+                }`}
+              onClick={e => {
+                e.stopPropagation()
+                onClick && onClick()
+              }}
+              type="button"
+            >
+              {moduleProgress.completed
+                ? "Review Again"
+                : moduleProgress.started
+                  ? `Resume (${moduleProgress.percentComplete}%)`
+                  : "Watch Video"}
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </button>
+          ) : (
+            <button
+              onClick={moduleProgress.started && !moduleProgress.completed ? handleResumeModule : handleStartModule}
+              className={`px-4 py-2 text-sm rounded-md transition-colors flex items-center ${moduleProgress.completed
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-[#233554] hover:bg-[#2c4269] text-white"
+                }`}
+              type="button"
+            >
+              {moduleProgress.completed
+                ? "Review Again"
+                : moduleProgress.started
+                  ? `Resume (${moduleProgress.percentComplete}%)`
                   : "Read Guide"}
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </button>
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -196,6 +227,7 @@ ModuleCard.propTypes = {
     icon: PropTypes.string,
   }).isRequired,
   size: PropTypes.oneOf(["small", "large"]),
+  onClick: PropTypes.func,
 }
 
 export default ModuleCard

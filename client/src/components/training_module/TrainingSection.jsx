@@ -9,164 +9,40 @@ import RecentActivity from "./RecentActivity"
 import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { UserInfoBar } from './UserInfoBar'
-
-// Mock training module data
-const trainingModules = {
-  video: [
-    {
-      id: "v1",
-      title: "Identifying Suspicious Email Headers",
-      description: "Learn how to analyze email headers to spot phishing attempts before opening them.",
-      duration: "12 min",
-      level: "Beginner",
-      thumbnail: "https://placehold.co/400x225/112240/64ffda?text=Email+Headers",
-      type: "video",
-      popular: true,
-    },
-    {
-      id: "v2",
-      title: "Spotting Fake URLs and Domains",
-      description: "Master the techniques to identify malicious URLs and lookalike domains.",
-      duration: "15 min",
-      level: "Intermediate",
-      thumbnail: "https://placehold.co/400x225/112240/64ffda?text=Fake+URLs",
-      type: "video",
-      popular: true,
-    },
-    {
-      id: "v3",
-      title: "Social Engineering Tactics Explained",
-      description: "Understand the psychological tricks attackers use to manipulate victims.",
-      duration: "18 min",
-      level: "Intermediate",
-      thumbnail: "https://placehold.co/400x225/112240/64ffda?text=Social+Engineering",
-      type: "video",
-      popular: false,
-    },
-    {
-      id: "v4",
-      title: "Protecting Your Digital Identity",
-      description: "Essential practices to safeguard your personal information online.",
-      duration: "20 min",
-      level: "Advanced",
-      thumbnail: "https://placehold.co/400x225/112240/64ffda?text=Digital+Identity",
-      type: "video",
-      popular: false,
-    },
-    {
-      id: "v5",
-      title: "Advanced Email Security Features",
-      description: "Learn how to leverage built-in security features in modern email clients.",
-      duration: "14 min",
-      level: "Advanced",
-      thumbnail: "https://placehold.co/400x225/112240/64ffda?text=Email+Security",
-      type: "video",
-      popular: false,
-    },
-  ],
-  text: [
-    {
-      id: "t1",
-      title: "The Anatomy of a Phishing Email",
-      description: "A comprehensive breakdown of common elements found in phishing attempts.",
-      readTime: "5 min read",
-      level: "Beginner",
-      icon: "mail",
-      type: "text",
-      popular: true,
-    },
-    {
-      id: "t2",
-      title: "Red Flags in Business Email Compromise",
-      description: "Learn to identify suspicious requests from seemingly legitimate business contacts.",
-      readTime: "8 min read",
-      level: "Intermediate",
-      icon: "alert",
-      type: "text",
-      popular: true,
-    },
-    {
-      id: "t3",
-      title: "Phishing Response Protocol",
-      description: "Step-by-step guide on what to do when you encounter a suspected phishing attempt.",
-      readTime: "6 min read",
-      level: "Beginner",
-      icon: "shield",
-      type: "text",
-      popular: false,
-    },
-    {
-      id: "t4",
-      title: "Secure Password Management",
-      description: "Best practices for creating and managing strong, unique passwords.",
-      readTime: "7 min read",
-      level: "Beginner",
-      icon: "lock",
-      type: "text",
-      popular: false,
-    },
-    {
-      id: "t5",
-      title: "Advanced Threat Analysis",
-      description: "Technical deep-dive into analyzing suspicious emails and attachments.",
-      readTime: "12 min read",
-      level: "Advanced",
-      icon: "search",
-      type: "text",
-      popular: false,
-    },
-  ],
-}
+import VideoModal from "./VideoModal"
+import trainingModules from "./TrainingModules"
+import VideoModalWrapper from "./VideoModalWrapper"
 
 const TrainingSection = ({ onBackToHome }) => {
   const [activeTab, setActiveTab] = useState("video")
   const { isLoading } = useAuth0()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filteredModules, setFilteredModules] = useState({
-    video: trainingModules.video,
-    text: trainingModules.text,
-  })
 
-  // Filter modules based on search query
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilteredModules({
-        video: trainingModules.video,
-        text: trainingModules.text,
-      })
-      return
-    }
-
-    const query = searchQuery.toLowerCase()
-    setFilteredModules({
-      video: trainingModules.video.filter(
-        (module) => module.title.toLowerCase().includes(query) || module.description.toLowerCase().includes(query),
-      ),
-      text: trainingModules.text.filter(
-        (module) => module.title.toLowerCase().includes(query) || module.description.toLowerCase().includes(query),
-      ),
-    })
-  }, [searchQuery])
-
-  // Get popular modules for featured section
-  const popularModules = [
-    ...trainingModules.video.filter((module) => module.popular),
-    ...trainingModules.text.filter((module) => module.popular),
-  ]
+  // NEW: State for video modal
+  const [selectedVideoModule, setSelectedVideoModule] = useState(null)
 
   const navigate = useNavigate()
   const { logout } = useAuth0()
+
+
+  // Handler for clicking a module
+  const handleModuleClick = (module) => {
+    if (module.type === "video" && module.videoUrl) {
+      setSelectedVideoModule(module)
+    }
+    // You can add logic for text modules if needed
+  }
+
+  // Handler to close the modal
+  const handleCloseModal = () => setSelectedVideoModule(null)
 
   return (
     <ProgressProvider>
       <TrainingSectionContent
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        filteredModules={filteredModules}
-        popularModules={popularModules}
         onBackToHome={onBackToHome}
+        onModuleClick={handleModuleClick} // Pass handler from parent!
+        trainingModules={trainingModules} // Pass the modules object
       />
       <div className="my-12 flex flex-col items-center justify-center bg-gradient-to-r from-[#112240] to-[#0a192f] rounded-lg border border-[#233554] p-8 shadow-lg">
         <h2 className="text-2xl font-bold mb-4 text-center">
@@ -183,6 +59,8 @@ const TrainingSection = ({ onBackToHome }) => {
           <Shield className="ml-3 h-6 w-6 text-[#0a192f] group-hover:text-[#233554] transition-colors" />
         </button>
       </div>
+      {/* Render the modal here, inside the provider but outside the content */}
+      <VideoModalWrapper selectedVideoModule={selectedVideoModule} handleCloseModal={handleCloseModal} />
     </ProgressProvider>
   )
 }
@@ -191,11 +69,9 @@ const TrainingSection = ({ onBackToHome }) => {
 const TrainingSectionContent = ({
   activeTab,
   setActiveTab,
-  searchQuery,
-  setSearchQuery,
-  filteredModules,
-  popularModules,
   onBackToHome,
+  onModuleClick,
+  trainingModules, // Now passed in
 }) => {
   const { initializeModules } = useContext(ProgressContext)
 
@@ -206,6 +82,12 @@ const TrainingSectionContent = ({
   }, []) // empty dependency array
 
   const navigate = useNavigate()
+
+  // Get popular modules for featured section
+  const popularModules = [
+    ...trainingModules.video.filter((module) => module.popular),
+    ...trainingModules.text.filter((module) => module.popular),
+  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100">
@@ -241,7 +123,7 @@ const TrainingSectionContent = ({
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {popularModules.map((module) => (
-              <ModuleCard key={module.id} module={module} size="small" />
+              <ModuleCard key={module.id} module={module} size="small" onClick={() => onModuleClick(module)} />
             ))}
           </div>
         </div>
@@ -274,21 +156,11 @@ const TrainingSectionContent = ({
 
         {/* Module Grid */}
         <div className="mb-8">
-          {filteredModules[activeTab].length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-[#64ffda] mb-4">
-                <Search className="h-12 w-12 mx-auto opacity-50" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">No modules found</h3>
-              <p className="text-gray-400">Try adjusting your search or browse our other training categories.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredModules[activeTab].map((module) => (
-                <ModuleCard key={module.id} module={module} />
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {trainingModules[activeTab].map((module) => (
+              <ModuleCard key={module.id} module={module} onClick={() => onModuleClick(module)} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
