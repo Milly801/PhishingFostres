@@ -2,7 +2,7 @@
 import { useProgress } from "./ProgressContext"
 import { Clock, CheckCircle, Play } from "lucide-react"
 
-const RecentActivity = ({ trainingModules }) => {
+const RecentActivity = ({ trainingModules, onContinueModule }) => {
   const { progress, startModule } = useProgress()
 
   // Get recently completed modules
@@ -36,10 +36,10 @@ const RecentActivity = ({ trainingModules }) => {
     })
     .filter(Boolean)
 
-  const handleContinueModule = (moduleId) => {
-    startModule(moduleId)
-    // In a real app, this would navigate to the module content page
-    alert(`Continuing module: ${moduleId}`)
+  const handleContinueModule = (module) => {
+    if (onContinueModule) {
+      onContinueModule(module);
+    }
   }
 
   if (recentlyCompleted.length === 0 && inProgress.length === 0) {
@@ -92,7 +92,7 @@ const RecentActivity = ({ trainingModules }) => {
                   </div>
                 </div>
                 <button
-                  onClick={() => handleContinueModule(module.id)}
+                  onClick={() => handleContinueModule(module)}
                   className="px-3 py-1.5 bg-[#233554] hover:bg-[#2c4269] text-xs rounded-md text-white transition-colors flex-shrink-0"
                 >
                   Continue
