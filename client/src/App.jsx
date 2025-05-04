@@ -54,24 +54,6 @@ function App() {
         onGetStarted={handleGetStarted}
       />
       <Footer />
-      {isAuthenticated && (
-        <div className="auth-container mt-8 text-center">
-          <h2>Welcome{user && user.name ? `, ${user.name}` : ''}!</h2>
-          {error && <div className="error">{error}</div>}
-          <button
-            className="mt-4 px-6 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-bold text-lg hover:bg-[#4cceac] transition-colors"
-            onClick={() => navigate("/training")}
-          >
-            Start Training
-          </button>
-          <button
-            className="mt-4 ml-4 px-6 py-3 rounded-md bg-red-500 text-white font-bold text-lg hover:bg-red-700 transition-colors"
-            onClick={() => logout({ returnTo: window.location.origin })}
-          >
-            Log Out
-          </button>
-        </div>
-      )}
     </div>
   );
 }
