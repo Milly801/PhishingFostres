@@ -41,8 +41,8 @@ const TrainingSection = ({ onBackToHome }) => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onBackToHome={onBackToHome}
-        onModuleClick={handleModuleClick} // Pass handler from parent!
-        trainingModules={trainingModules} // Pass the modules object
+        onModuleClick={handleModuleClick}
+        trainingModules={trainingModules}
       />
       <div className="my-12 flex flex-col items-center justify-center bg-gradient-to-r from-[#112240] to-[#0a192f] rounded-lg border border-[#233554] p-8 shadow-lg">
         <h2 className="text-2xl font-bold mb-4 text-center">
@@ -113,7 +113,10 @@ const TrainingSectionContent = ({
         <ProgressDashboard trainingModules={trainingModules} />
 
         {/* Recent Activity */}
-        <RecentActivity trainingModules={trainingModules} />
+        <RecentActivity
+          trainingModules={trainingModules}
+          onContinueModule={onModuleClick}
+        />
 
         {/* Featured Modules */}
         <div className="mb-12">
