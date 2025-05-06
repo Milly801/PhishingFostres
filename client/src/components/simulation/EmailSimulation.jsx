@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react"
 import { Shield, AlertTriangle, ChevronRight, User, Clock, Paperclip, Check, X, ArrowLeft, ChevronLeft } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import { useAuth0 } from "@auth0/auth0-react"
 
 const EmailSimulation = () => {
   const navigate = useNavigate()
@@ -16,6 +17,7 @@ const EmailSimulation = () => {
   const [completed, setCompleted] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { user, isAuthenticated } = useAuth0()
 
   const API_BASE_URL = 'https://phishingfostres.onrender.com'
 
@@ -149,12 +151,31 @@ const EmailSimulation = () => {
     )
   }
 
-  const handleSelection = (isPhishing) => {
+  const handleSelection = async (isPhishing) => {
     setSelectedOption(isPhishing)
     setShowFeedback(true)
 
-    if (isPhishing === currentEmail.isPhishing) {
-      setScore(score + 1)
+    const passed = isPhishing === currentEmail.isPhishing
+    if (passed) setScore(score + 1)
+
+    // --- Using Auth0 user.sub as user_id ---
+    try {
+      const auth0_id = user?.sub || "anonymous"; // fallback if not logged in
+
+      const payload = {
+        email_scenario_id: currentEmail.id,
+        phishing_status: currentEmail.isPhishing ? "phishing" : "legitimate",
+        auth0_id,
+        user_response: isPhishing ? "phishing" : "legitimate",
+        result: passed ? "pass" : "fail"
+      };
+
+      await axios.post(
+        `${API_BASE_URL}/api/user-response`,
+        payload
+      );
+    } catch (err) {
+      console.error("Failed to save user response:", err);
     }
   }
 
