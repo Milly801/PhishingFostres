@@ -9,9 +9,9 @@ from sqlalchemy.orm import relationship
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(String, primary_key=True, default=get_uuid)
+    id = Column(String, default=get_uuid)
     user_name = Column(String, nullable=True)
-    auth0_id = Column(String, nullable=False)
+    auth0_id = Column(String, primary_key=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
@@ -31,5 +31,5 @@ class User(Base):
 
     def __repr__(self):
         return f"<User(id={self.id}, user_name={self.user_name}, email={self.email})>"
-    
-    responses = relationship('UserResponse', backref='user_responses', cascade='all, delete-orphan')
+
+    responses = relationship('UserResponse', back_populates='user', cascade='all, delete-orphan')

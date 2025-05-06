@@ -8,7 +8,7 @@ router = APIRouter()
 class UserResponseRequest(BaseModel):
     email_scenario_id: str
     phishing_status: str
-    user_id: str
+    auth0_id: str
     user_response: str
     result: str
 
@@ -19,7 +19,7 @@ async def user_response(request: UserResponseRequest):
         response = save_user_response(
             email_scenario_id=request.email_scenario_id,
             phishing_status=request.phishing_status,
-            user_id=request.user_id,
+            auth0_id=request.auth0_id,
             user_response=request.user_response,
             result=request.result
         )
