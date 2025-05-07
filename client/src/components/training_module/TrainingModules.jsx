@@ -6,7 +6,7 @@ const trainingModules = {
             description: "Learn how to analyze email headers to spot phishing attempts before opening them.",
             duration: "4 mins",
             level: "Beginner",
-            thumbnail: "https://placehold.co/400x225/112240/64ffda?text=Email+Headers",
+            thumbnail: "https://i.postimg.cc/rpNcf706/email-header.jpg",
             type: "video",
             popular: true,
             videoUrl: "https://www.youtube.com/embed/U7tbJVSInvo?si=Y8y89nIyVV2rE7F0"
@@ -17,7 +17,7 @@ const trainingModules = {
             description: "Master the techniques to identify malicious URLs and lookalike domains.",
             duration: "6 mins",
             level: "Intermediate",
-            thumbnail: "https://placehold.co/400x225/112240/64ffda?text=Fake+URLs",
+            thumbnail: "https://i.postimg.cc/bwQjv4RG/fake-url.jpg",
             type: "video",
             popular: true,
             videoUrl: "https://www.youtube.com/embed/Th7nu3aTqLs?si=aaUqKZJKswcE-Ifo"
@@ -28,7 +28,7 @@ const trainingModules = {
             description: "Understand the psychological tricks attackers use to manipulate victims.",
             duration: "7 mins",
             level: "Intermediate",
-            thumbnail: "https://placehold.co/400x225/112240/64ffda?text=Social+Engineering",
+            thumbnail: "https://i.postimg.cc/MT3C4wzL/social-eng.jpg",
             type: "video",
             popular: false,
             videoUrl: "https://www.youtube.com/embed/v7VTJhkJUUY?si=zVGzpVN1xHKcw09G"

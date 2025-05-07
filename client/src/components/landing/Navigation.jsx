@@ -40,8 +40,10 @@ export function Navigation({ onGetStarted }) {
                 {/* Animated gradient border */}
                 <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#64ffda]/20 to-transparent"></div>
 
-                {/* Glassmorphism background */}
-                <div className="absolute inset-0 bg-[#64ffda]/5 backdrop-blur-sm"></div>
+                {/* Glassmorphism background - Modified to only show when scrolled */}
+                {isScrolled && (
+                    <div className="absolute inset-0 bg-[#64ffda]/5 backdrop-blur-sm"></div>
+                )}
 
                 {/* Main content */}
                 <div className="relative w-full px-8 md:px-16 max-w-7xl mx-auto">
@@ -84,7 +86,7 @@ export function Navigation({ onGetStarted }) {
                             {/* Enhanced Get Started Button */}
                             <button
                                 onClick={() => loginWithRedirect({ appState: { returnTo: "/training" } })}
-                                className="px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors"
+                                className="relative group px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors overflow-hidden"
                             >
                                 <span className="relative z-10 flex items-center">
                                     Start Training
