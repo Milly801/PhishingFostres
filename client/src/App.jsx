@@ -21,12 +21,23 @@ function App() {
   useEffect(() => {
     const handleAuthentication = async () => {
       if (isAuthenticated && user) {
-        try {
-          const token = await getAccessTokenSilently();
-          await authService.signup(token);
-          console.log('Signup (or get existing user) successful');
-        } catch (error) {
-          setError(error.detail || error.message || 'An error occurred during authentication');
+        const isSignUp = localStorage.getItem('isSignUp') === 'true';
+        const isNewSignup = window.location.search.includes('screen_hint=signup');
+
+        // Only call signup if both conditions are met
+        if (isSignUp && isNewSignup) {
+          try {
+            const token = await getAccessTokenSilently();
+            await authService.signup(token);
+            console.log('Signup successful');
+          } catch (error) {
+            setError(error.detail || error.message || 'An error occurred during authentication');
+          } finally {
+            localStorage.removeItem('isSignUp');
+          }
+        } else {
+          // This is a regular login, no need to call signup
+          console.log('Regular login successful');
         }
       }
     };
@@ -36,7 +47,10 @@ function App() {
 
 
   const handleGetStarted = () => {
-    loginWithRedirect();
+    if (window.location.pathname === '/signup' || window.location.search.includes('screen_hint=signup')) {
+      localStorage.setItem('isSignUp', 'true');
+    }
+    loginWithRedirect({ screen_hint: 'signup' });
   };
   const handleWatchDemo = () => {
     console.log('Watch demo clicked');
