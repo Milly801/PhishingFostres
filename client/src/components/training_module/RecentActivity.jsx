@@ -5,6 +5,11 @@ import { Clock, CheckCircle, Play } from "lucide-react"
 const RecentActivity = ({ trainingModules, onContinueModule }) => {
   const { progress, startModule } = useProgress()
 
+  // Add formatProgress function
+  const formatProgress = (progress) => {
+    return Math.round(progress);
+  };
+
   // Get recently completed modules
   const recentlyCompleted = Object.entries(progress.modules)
     .filter(([_, data]) => data.completed)
@@ -88,7 +93,7 @@ const RecentActivity = ({ trainingModules, onContinueModule }) => {
                     <div className="h-1.5 bg-[#233554] rounded-full overflow-hidden flex-grow mr-2">
                       <div className="h-full bg-[#64ffda] rounded-full" style={{ width: `${module.progress}%` }}></div>
                     </div>
-                    <span className="text-xs text-gray-400">{module.progress}%</span>
+                    <span className="text-xs text-gray-400">{formatProgress(module.progress)}%</span>
                   </div>
                 </div>
                 <button

@@ -1,6 +1,6 @@
 "use client"
 import PropTypes from "prop-types"
-import { Play, Clock, ChevronRight, CheckCircle, Pause } from "lucide-react"
+import { Play, Clock, ChevronRight, CheckCircle, Pause, BookOpen } from "lucide-react"
 import { useProgress } from "./ProgressContext"
 
 // Icons for text-based modules
@@ -95,23 +95,28 @@ const ModuleCard = ({ module, size = "large", onClick }) => {
     percentComplete: 0,
   }
 
-  const handleStartModule = () => {
-    startModule(module.id)
-    // In a real app, this would navigate to the module content page
-    alert(`Starting module: ${module.title}`)
+  // Add a function to format the progress percentage
+  const formatProgress = (progress) => {
+    return Math.round(progress);
+  };
+
+  const handleStartModule = (e) => {
+    e.stopPropagation();
+    startModule(module.id);
+    onClick && onClick(module);
   }
 
-  const handleResumeModule = () => {
-    startModule(module.id)
-    // In a real app, this would navigate to the module content page at the saved position
-    alert(`Resuming module: ${module.title} at ${moduleProgress.percentComplete}%`)
+  const handleResumeModule = (e) => {
+    e.stopPropagation();
+    startModule(module.id);
+    onClick && onClick(module);
   }
 
   return (
     <div
       className={`bg-[#112240] border border-[#233554] rounded-lg overflow-hidden hover:border-[#64ffda] transition-all duration-300 transform hover:-translate-y-1 group relative ${moduleProgress.completed ? "border-green-500 border-opacity-50" : ""
         } cursor-pointer`}
-      onClick={module.type === "video" && onClick ? onClick : undefined}
+      onClick={onClick ? () => onClick(module) : undefined}
       tabIndex={0}
       role="button"
       aria-label={`Open module: ${module.title}`}
@@ -123,46 +128,55 @@ const ModuleCard = ({ module, size = "large", onClick }) => {
         </div>
       )}
 
-      {/* Progress Bar (only show if started but not completed) */}
+      {/* Progress Bar */}
       {moduleProgress.started && !moduleProgress.completed && (
         <div className="absolute top-0 left-0 right-0 h-1 bg-[#233554] z-10">
           <div className="h-full bg-[#64ffda]" style={{ width: `${moduleProgress.percentComplete}%` }}></div>
         </div>
       )}
 
-      {module.type === "video" ? (
-        <div className={`relative ${size === "large" ? "h-48" : "h-36"}`}>
-          <img src={module.thumbnail || "/placeholder.svg"} alt={module.title} className="w-full h-full object-cover" />
-          {/* Play button overlay */}
-          <button
-            className="absolute inset-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 rounded-md text-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity"
-            onClick={e => {
-              e.stopPropagation()
-              onClick && onClick()
-            }}
-            aria-label={`Play video: ${module.title}`}
-            type="button"
-          >
-            <span className="w-14 h-14 rounded-full bg-[#64ffda]/90 flex items-center justify-center">
-              {moduleProgress.started && !moduleProgress.completed ? (
-                <Pause className="h-7 w-7 text-[#0a192f]" />
-              ) : (
-                <Play className="h-7 w-7 text-[#0a192f] ml-1" />
-              )}
-            </span>
-          </button>
-          <div className="absolute bottom-2 right-2 bg-[#0a192f]/80 text-xs px-2 py-1 rounded flex items-center">
-            <Clock className="h-3 w-3 mr-1" />
-            {module.duration}
+      {/* Thumbnail Section - Now for both video and text modules */}
+      <div className={`relative ${size === "large" ? "h-48" : "h-36"}`}>
+        {module.thumbnail ? (
+          <>
+            <img
+              src={module.thumbnail}
+              alt={module.title}
+              className="w-full h-full object-cover bg-[#0a192f]"
+            />
+            {/* Play/Read button overlay */}
+            <button
+              className="absolute inset-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 rounded-md text-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={e => {
+                e.stopPropagation()
+                onClick && onClick()
+              }}
+              aria-label={`Open ${module.type === "video" ? "video" : "guide"}: ${module.title}`}
+              type="button"
+            >
+              <span className="w-14 h-14 rounded-full bg-[#64ffda]/90 flex items-center justify-center">
+                {moduleProgress.started && !moduleProgress.completed ? (
+                  <Pause className="h-7 w-7 text-[#0a192f]" />
+                ) : module.type === "video" ? (
+                  <Play className="h-7 w-7 text-[#0a192f] ml-1" />
+                ) : (
+                  <BookOpen className="h-7 w-7 text-[#0a192f]" />
+                )}
+              </span>
+            </button>
+          </>
+        ) : (
+          <div className="w-full h-full bg-[#0a192f] flex items-center justify-center">
+            <div className="w-20 h-20 rounded-full bg-[#233554] flex items-center justify-center text-[#64ffda]">
+              {moduleIcons[module.icon]}
+            </div>
           </div>
+        )}
+        <div className="absolute bottom-2 right-2 bg-[#0a192f]/80 text-xs px-2 py-1 rounded flex items-center">
+          <Clock className="h-3 w-3 mr-1" />
+          {module.type === "video" ? module.duration : module.readTime}
         </div>
-      ) : (
-        <div className={`${size === "large" ? "h-48" : "h-36"} bg-[#0a192f] flex items-center justify-center`}>
-          <div className="w-20 h-20 rounded-full bg-[#233554] flex items-center justify-center text-[#64ffda]">
-            {moduleIcons[module.icon]}
-          </div>
-        </div>
-      )}
+      </div>
 
       <div className="p-5">
         <div className="flex justify-between items-start mb-3">
@@ -180,14 +194,14 @@ const ModuleCard = ({ module, size = "large", onClick }) => {
                 }`}
               onClick={e => {
                 e.stopPropagation()
-                onClick && onClick()
+                onClick && onClick(module)
               }}
               type="button"
             >
               {moduleProgress.completed
                 ? "Review Again"
                 : moduleProgress.started
-                  ? `Resume (${moduleProgress.percentComplete}%)`
+                  ? `Resume (${formatProgress(moduleProgress.percentComplete)}%)`
                   : "Watch Video"}
               <ChevronRight className="h-4 w-4 ml-1" />
             </button>
@@ -203,7 +217,7 @@ const ModuleCard = ({ module, size = "large", onClick }) => {
               {moduleProgress.completed
                 ? "Review Again"
                 : moduleProgress.started
-                  ? `Resume (${moduleProgress.percentComplete}%)`
+                  ? `Resume (${formatProgress(moduleProgress.percentComplete)}%)`
                   : "Read Guide"}
               <ChevronRight className="h-4 w-4 ml-1" />
             </button>

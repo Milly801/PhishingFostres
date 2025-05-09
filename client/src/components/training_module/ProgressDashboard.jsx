@@ -5,6 +5,11 @@ import { Award, BookOpen, BarChart, Clock, RefreshCw } from "lucide-react"
 const ProgressDashboard = ({ trainingModules }) => {
   const { progress, resetAllProgress } = useProgress()
 
+  // Add formatProgress function
+  const formatProgress = (progress) => {
+    return Math.round(progress);
+  };
+
   // Calculate total modules
   const totalModules = Object.values(trainingModules).flat().length
 
@@ -49,7 +54,7 @@ const ProgressDashboard = ({ trainingModules }) => {
       <div className="mb-6">
         <div className="flex justify-between text-sm mb-1">
           <span>Overall Completion</span>
-          <span className="text-[#64ffda]">{completionPercentage}%</span>
+          <span className="text-[#64ffda]">{formatProgress(completionPercentage)}%</span>
         </div>
         <div className="h-2 bg-[#233554] rounded-full overflow-hidden">
           <div
@@ -186,7 +191,7 @@ const ProgressDashboard = ({ trainingModules }) => {
                             style={{ width: `${progress.modules[id].percentComplete}%` }}
                           ></div>
                         </div>
-                        <span className="text-xs text-gray-400">{progress.modules[id].percentComplete}%</span>
+                        <span className="text-xs text-gray-400">{formatProgress(progress.modules[id].percentComplete)}%</span>
                       </div>
                     </div>
                   </div>

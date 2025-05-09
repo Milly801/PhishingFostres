@@ -12,6 +12,7 @@ import { UserInfoBar } from './UserInfoBar'
 import VideoModal from "./VideoModal"
 import trainingModules from "./TrainingModules"
 import VideoModalWrapper from "./VideoModalWrapper"
+import TextModuleViewer from './TextModuleViewer'
 
 const TrainingSection = ({ onBackToHome }) => {
   const [activeTab, setActiveTab] = useState("video")
@@ -19,6 +20,7 @@ const TrainingSection = ({ onBackToHome }) => {
 
   // NEW: State for video modal
   const [selectedVideoModule, setSelectedVideoModule] = useState(null)
+  const [selectedTextModule, setSelectedTextModule] = useState(null)
 
   const navigate = useNavigate()
   const { logout } = useAuth0()
@@ -28,8 +30,9 @@ const TrainingSection = ({ onBackToHome }) => {
   const handleModuleClick = (module) => {
     if (module.type === "video" && module.videoUrl) {
       setSelectedVideoModule(module)
+    } else if (module.type === "text") {
+      setSelectedTextModule(module)
     }
-    // You can add logic for text modules if needed
   }
 
   // Handler to close the modal
@@ -61,6 +64,12 @@ const TrainingSection = ({ onBackToHome }) => {
       </div>
       {/* Render the modal here, inside the provider but outside the content */}
       <VideoModalWrapper selectedVideoModule={selectedVideoModule} handleCloseModal={handleCloseModal} />
+      {selectedTextModule && (
+        <TextModuleViewer
+          module={selectedTextModule}
+          onClose={() => setSelectedTextModule(null)}
+        />
+      )}
     </ProgressProvider>
   )
 }
