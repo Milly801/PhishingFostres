@@ -107,6 +107,6 @@ const trainingModules = {
             popular: false,
         },
     ],
-}
+};
 
-export default trainingModules
+export default trainingModules;
