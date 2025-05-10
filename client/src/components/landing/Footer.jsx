@@ -28,7 +28,7 @@ export function Footer() {
 
                         <div className="flex items-center space-x-4">
                             <a
-                                href="https://github.com"
+                                href="https://github.com/Milly801/PhishingFostres"
                                 className="group flex items-center space-x-2 text-gray-400 hover:text-[#64ffda] transition-all duration-300"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -41,7 +41,7 @@ export function Footer() {
                             </a>
                             <span className="text-gray-600">•</span>
                             <a
-                                href="mailto:contact@example.com"
+                                href="mailto:gcwalisilematse186@gmail.com"
                                 className="group flex items-center space-x-2 text-gray-400 hover:text-[#64ffda] transition-all duration-300"
                             >
                                 <div className="relative p-2">

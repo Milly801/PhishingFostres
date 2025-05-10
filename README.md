@@ -1,35 +1,27 @@
-🌐 PHISHING SIMULATION & TRAINING TOOL
+# 🌐 PhishFortress
 
-📖 DESCRIPTION
+## 📖 Description
 
-A web-based platform designed to reduce susceptibility to phishing attacks by enhancing user awareness and detection skills.
+A web-based platform designed to help users learn about and practice identifying phishing attacks through interactive training and simulations.
 
-Provides realistic simulations, instant feedback, personalized training, and performance analytics.
+## 💡 Solution
 
-💡 PROPOSED SOLUTION
+- Provides realistic phishing simulations to test users' ability to identify phishing attempts
+- Offers basic feedback on whether an email is legitimate or a phishing attempt
+- Includes training modules to improve phishing detection skills
 
-Simulates real-world phishing scenarios to test and train users in recognizing phishing attempts.
+## ✨ Key Features
 
-Offers immediate feedback and targeted training to improve user performance.
+- **🕵️ Phishing Simulations**: Users can practice identifying phishing attempts through simulated scenarios
+- **📚 Training Modules**: Educational content to help users understand common phishing tactics
+- **📊 Basic Progress Tracking**: Monitor your improvement in identifying phishing attempts
 
-Tracks progress and generates analytics for organizations.
+## 🚀 Usage
 
-✨KEY FEATURES
+- Access training modules to learn about phishing detection
+- Practice with simulated phishing scenarios
+- Track your progress in identifying phishing attempts
 
-🕵️ Realistic Phishing Simulations: Users receive simulated phishing emails that mimic real-world attacks.
+## 🤝 Contribution
 
-⚡ Instant Feedback: Interaction with phishing emails triggers immediate feedback explaining why they were phishing attempts.
-
-🎯 Personalized Training Modules: Targeted training based on individual performance to address weaknesses.
-
-📊 Performance Tracking & Analytics: Monitors user progress, identifies improvement areas, and generates organizational reports.
-
-🚀 USAGE
-
-Ideal for organizations to train employees on phishing detection and cybersecurity awareness.
-
-Access training modules and review progress using built-in analytics tools.
-
-🤝 CCONTRIBUTION
-
-Contributions are welcome! Suggest improvements or submit new ideas via pull requests.
+Contributions are welcome! Feel free to suggest improvements or submit new ideas via pull requests.

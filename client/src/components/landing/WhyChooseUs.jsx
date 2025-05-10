@@ -46,7 +46,7 @@ export function WhyChooseUs() {
                                 </svg>
                             </div>
                             <h4 className="font-bold text-[#64ffda] ml-4 transform group-hover:translate-x-2 transition-transform duration-300">
-                                Immediate Feedback
+                                Clear Identification
                             </h4>
                         </div>
                         <p className="text-gray-300 transform opacity-90 group-hover:opacity-100 transition-all duration-300">
