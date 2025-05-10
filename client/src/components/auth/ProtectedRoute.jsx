@@ -5,7 +5,6 @@ const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
     if (isLoading) {
-        // Optionally, show a loading spinner or message
         return <div>Loading...</div>;
     }
 

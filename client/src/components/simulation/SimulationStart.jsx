@@ -27,9 +27,7 @@ const SimulationStart = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-[#112240] text-gray-100 flex items-center justify-center px-4 overflow-x-hidden">
       <div className="max-w-3xl w-full relative">
-        {/* Replace the user info bar with this new modern version */}
         <UserInfoBar />
-        {/* Reduce PhishFortress logo size */}
         <div className="flex items-center mb-6 sm:mb-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -45,7 +43,7 @@ const SimulationStart = () => {
           </motion.div>
         </div>
 
-        {/* Add glow effect and better shadow to make it pop */}
+        {/* glow effect and better shadow to make it pop */}
         <div className="bg-[#112240] rounded-xl border border-[#233554] shadow-[0_0_25px_rgba(100,255,218,0.1)] hover:shadow-[0_0_35px_rgba(100,255,218,0.15)] transition-all duration-300 overflow-hidden">
           {/* Header - More compact on mobile */}
           <div className="relative bg-[#0a192f] p-4 sm:p-8 border-b border-[#233554] overflow-hidden">

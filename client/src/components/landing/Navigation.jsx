@@ -83,7 +83,7 @@ export function Navigation({ onGetStarted }) {
                                 </a>
                             ))}
 
-                            {/* Enhanced Get Started Button */}
+                            {/* Enhanced Start Training Button */}
                             <button
                                 onClick={() => loginWithRedirect({ appState: { returnTo: "/training" } })}
                                 className="relative group px-8 py-3 rounded-md bg-[#64ffda] text-[#0a192f] font-medium hover:bg-[#4cceac] transition-colors overflow-hidden"

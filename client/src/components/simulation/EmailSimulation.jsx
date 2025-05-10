@@ -40,7 +40,7 @@ const EmailSimulation = () => {
         ? new Date(apiEmail.created_at).toLocaleString()
         : new Date().toLocaleString(),
       body: formatEmailBody(apiEmail.body || {}),
-      isPhishing: Boolean(apiEmail.is_phishing), // Ensure boolean
+      isPhishing: Boolean(apiEmail.is_phishing),
     }
   }
 
@@ -103,7 +103,7 @@ const EmailSimulation = () => {
     }
 
     fetchEmails()
-  }, []) // Empty dependency array means this runs once on mount
+  }, []) 
 
   const currentEmail = emails[currentEmailIndex]
 
